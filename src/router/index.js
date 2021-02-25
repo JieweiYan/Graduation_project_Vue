@@ -17,34 +17,64 @@ const routes = [
         component:()=>import('../views/header/home')
       },
       {
-        path:'activity',
-        name:'活动',
-        component:()=>import('../views/header/activity')
-      },
-      {
-        path:'directory',
-        name:'校友通讯录',
-        component:()=>import('../views/header/directory')
-      },
-      {
         path:'forum',
         name:'论坛',
         component:()=>import('../views/header/forum')
       },
       {
-        path:'user',
-        name:'个人页面',
-        component:()=>import('../views/user/user'),
-        children:[
+        path:'directory',
+        name:'通讯录',
+        component:()=>import('../views/header/directory')
+      },
+      {
+        path:'activity',
+        name:'活动',
+        component:()=>import('../views/header/activity')
+      },
+      {
+        path:'usercenter',
+        name:'个人中心',
+        redirect:'/usercenter/post',
+        component:()=>import('../views/usercenter/usercenter'),
+        children: [
           {
-            path:'usercenter',
-            name:'个人中心',
-            component:()=>import('../views/user/usercenter')
+            path: '/usercenter/post',
+            name: '发帖',
+            component:()=>import("../views/usercenter/post")
           },
           {
-            path:'changepwd',
+            path: '/usercenter/reply',
+            name: '回复',
+            component:()=>import("../views/usercenter/reply")
+          },
+          {
+            path: '/usercenter/album',
+            name: '相册',
+            component:()=>import("../views/usercenter/album")
+          },
+        ]
+      },
+      {
+        path:'usersetting',
+        name:'个人设置',
+        redirect:'/usersetting/changeinfo',
+        component:()=>import('../views/usersetting/usersetting'),
+        children:[
+
+          {
+            path:'/usersetting/changeinfo',
+            name:'修改个人信息',
+            component:()=>import('../views/usersetting/changeinfo')
+          },
+          {
+            path:'/usersetting/changeavatar',
+            name:'修改头像',
+            component:()=>import('../views/usersetting/changeavatar')
+          },
+          {
+            path:'/usersetting/changepwd',
             name:'修改密码',
-            component:()=>import('../views/user/changepwd')
+            component:()=>import('../views/usersetting/changepwd')
           },
         ]
       },
@@ -61,6 +91,7 @@ const routes = [
     name:"登录",
     component:()=>import('../views/register/login')
   },
+
   {
     path: "/test",
     name:"test",

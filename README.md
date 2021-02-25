@@ -1,19 +1,5 @@
-# vue_project
+####2020年2月20日1:10
+完成了首页header，以及登录注册页面
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+####2020年2月21日1:23
+完成了个人信息页，包括修改个人信息、修改密码

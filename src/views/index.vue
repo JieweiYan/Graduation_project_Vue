@@ -1,25 +1,20 @@
 <template>
-  <div>
-    <el-container style="height: 2000px;border: 1px solid #eee">
-      <el-header
-          style="text-align: right;
-          font-size: 12px;
-          height: 70px;
-          text-align: center;
-          vertical-align: center">
+  <div style="width: 100%">
+    <el-container type="flex" style="height: 100%; border: 1px solid #eee; ">
+      <el-header style=" height: 75px;background-color: #ffffff;">
         <el-row type="flex" class="row-bg grid-content bg-purple" justify="center" align="middle">
           <el-col :span="5">
             <div style="height: 65px">
               <a><img src="../assets/image/ncu.png" width="189px" height="60px"></a>
             </div>
           </el-col>
-          <el-col :span="10">
+          <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                <el-menu-item index="1">
+                <el-menu-item index="1" >
                   <router-link to="/home">首页</router-link>
                 </el-menu-item>
-                <el-menu-item index="2">
+                <el-menu-item index="2" >
                   <router-link to="/forum">论坛</router-link>
                 </el-menu-item>
                 <el-menu-item index="3">
@@ -28,7 +23,19 @@
                 <el-menu-item index="4">
                   <router-link to="/activity">活动</router-link>
                 </el-menu-item>
+
+
               </el-menu>
+            </div>
+          </el-col>
+          <el-col :span="3">
+            <div class="grid-content bg-purple">
+              <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item>
+                  <el-input v-model="input" size="small" placeholder="搜索" suffix-icon="el-icon-search"></el-input>
+                </el-menu-item>
+              </el-menu>
+
             </div>
           </el-col>
           <el-col :span="2">
@@ -36,13 +43,25 @@
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-submenu index="8">
                   <template slot="title">
-                    <el-avatar :size="30" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                    <el-avatar :size="30" shape="square" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
                     <span slot="title" style="margin-left: 10px">严捷伟</span>
                   </template>
                   <el-menu-item>
-                    <router-link to="/user">个人中心</router-link>
+                    <router-link to="/usercenter">
+                      <i class="el-icon-user"></i>
+                      <span >个人中心</span>
+                    </router-link>
                   </el-menu-item>
-                  <el-menu-item>退出登录</el-menu-item>
+                  <el-menu-item>
+                    <router-link to="/usersetting">
+                      <i class="el-icon-setting"></i>
+                      <span >个人设置</span>
+                    </router-link>
+                  </el-menu-item>
+                  <el-menu-item>
+                    <i class="el-icon-s-promotion"></i>
+                    <span >退出登录</span>
+                  </el-menu-item>
                 </el-submenu>
               </el-menu>
             </div>
@@ -51,15 +70,18 @@
       </el-header>
 
 
-      <el-main>
-        <router-view></router-view>
+      <el-main style="background: #E9EEF3">
+        <div style="width: 1100px; min-height: 800px; margin: 0 auto">
+          <router-view></router-view>
+        </div>
+
       </el-main>
 
 
-      <el-footer>
-        <template>
-          <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
-        </template>
+      <el-footer style="height: auto;background: #E9EEF3;">
+        <div style="width: 100%;" >
+          <p>Design by JieweiYan</p>
+        </div>
       </el-footer>
     </el-container>
   </div>
@@ -67,18 +89,26 @@
 
 
 <style>
-.el-header, .el-footer {
-  background-color: #ffffff;
+.el-header {
   color: #333;
   text-align: center;
   line-height: 60px;
+  font-size: 13px;
+  vertical-align: center;
+
+}
+.el-footer{
+  color: #333;
+  text-align: center;
+  line-height: 30px;
+  font-size: 13px;
+  vertical-align: center;
 }
 
 .el-main {
-  background-color: #E9EEF3;
+  background-color: #ffffff;
   color: #333;
   text-align: center;
-  line-height: 160px;
 }
 
 a {
@@ -95,14 +125,13 @@ a {
 
 .el-row {
   margin-bottom: 5px;
-
 &
 :last-child {
   margin-bottom: 0;
   height: 100%;
 }
-
 }
+
 .el-col {
   border-radius: 4px;
   justify-content: center; /*主轴上居中*/
@@ -115,7 +144,7 @@ a {
 }
 
 .bg-purple-dark {
-  background: #99a9bf;
+  background: #ffffff;
 }
 
 .bg-purple {
@@ -123,7 +152,7 @@ a {
 }
 
 .bg-purple-light {
-  background: #e5e9f2;
+  background: #ffffff;
 }
 
 .grid-content {
@@ -143,11 +172,14 @@ export default {
   data() {
     return {
       activeIndex: '1',
-      activeIndex2: '1'
+      activeIndex2: '1',
+      input: '',
     };
   },
   methods: {
-
+    change(){
+      this.activeIndex2='1'
+    },
 
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
