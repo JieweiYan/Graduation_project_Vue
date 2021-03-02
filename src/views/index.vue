@@ -18,7 +18,7 @@
                   <router-link to="/forum">论坛</router-link>
                 </el-menu-item>
                 <el-menu-item index="3">
-                  <router-link to="/directory">通讯录</router-link>
+                  <router-link to="/addresslist">通讯录</router-link>
                 </el-menu-item>
                 <el-menu-item index="4">
                   <router-link to="/activity">活动</router-link>
@@ -32,7 +32,7 @@
             <div class="grid-content bg-purple">
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item>
-                  <el-input v-model="input" size="small" placeholder="搜索" suffix-icon="el-icon-search"></el-input>
+                  <el-input v-model="input" size="small" placeholder="搜索人、帖子" suffix-icon="el-icon-search"></el-input>
                 </el-menu-item>
               </el-menu>
 

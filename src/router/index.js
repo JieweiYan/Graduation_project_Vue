@@ -40,9 +40,22 @@ const routes = [
         ]
       },
       {
-        path:'directory',
+        path:'/addresslist',
         name:'通讯录',
-        component:()=>import('../views/header/directory')
+        redirect: '/addresslist/chatroom',
+        component:()=>import('../views/addresslist/addresslist'),
+        children: [
+          {
+            path: '/addresslist/chatroom',
+            name:'聊天室',
+            component:()=>import('../views/addresslist/chatroom')
+          },
+          {
+            path: '/addresslist/classalbum',
+            name:'班级相册',
+            component:()=>import('../views/addresslist/classalbum')
+          },
+        ]
       },
       {
         path:'activity',

@@ -51,7 +51,10 @@ export default {
     gotousercenter(){
       alert("1111")
       this.$router.push('/usercenter')
-    }
+    },
+    gotoreadpost(){
+      this.$router.push('/forum/readpost')
+    },
   },
 }
 </script>
