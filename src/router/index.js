@@ -17,6 +17,24 @@ const routes = [
         component:()=>import('../views/header/home')
       },
       {
+        path: 'search',
+        name:'搜索',
+        redirect: '/search/searchpost',
+        component:()=>import('../views/search/search'),
+        children: [
+          {
+            path: '/search/searchpost',
+            name: '搜索帖子',
+            component:()=>import('../views/search/searchpost'),
+          },
+          {
+            path: '/search/searchpeople',
+            name: '搜索人',
+            component:()=>import('../views/search/searchpeople'),
+          }
+        ]
+      },
+      {
         path:'forum',
         name:'论坛',
         component:()=>import('../views/forum/forum'),

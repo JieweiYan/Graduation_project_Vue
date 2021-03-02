@@ -11,10 +11,10 @@
           <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                <el-menu-item index="1" >
+                <el-menu-item index="1">
                   <router-link to="/home">首页</router-link>
                 </el-menu-item>
-                <el-menu-item index="2" >
+                <el-menu-item index="2">
                   <router-link to="/forum">论坛</router-link>
                 </el-menu-item>
                 <el-menu-item index="3">
@@ -32,7 +32,13 @@
             <div class="grid-content bg-purple">
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item>
-                  <el-input v-model="input" size="small" placeholder="搜索人、帖子" suffix-icon="el-icon-search"></el-input>
+                  <el-input v-model="input" size="small" placeholder="搜索人、帖子"
+                            @keyup.enter.native="gotosearch">
+                    <i class="el-icon-search"
+                      slot="suffix"
+                      @click="gotosearch">
+                    </i>
+                  </el-input>
                 </el-menu-item>
               </el-menu>
 
@@ -43,24 +49,25 @@
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-submenu index="8">
                   <template slot="title">
-                    <el-avatar :size="30" shape="square" src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                    <el-avatar :size="30" shape="square"
+                               src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
                     <span slot="title" style="margin-left: 10px">严捷伟</span>
                   </template>
                   <el-menu-item>
                     <router-link to="/usercenter">
                       <i class="el-icon-user"></i>
-                      <span >个人中心</span>
+                      <span>个人中心</span>
                     </router-link>
                   </el-menu-item>
                   <el-menu-item>
                     <router-link to="/usersetting">
                       <i class="el-icon-setting"></i>
-                      <span >个人设置</span>
+                      <span>个人设置</span>
                     </router-link>
                   </el-menu-item>
                   <el-menu-item>
                     <i class="el-icon-s-promotion"></i>
-                    <span >退出登录</span>
+                    <span>退出登录</span>
                   </el-menu-item>
                 </el-submenu>
               </el-menu>
@@ -79,7 +86,7 @@
 
 
       <el-footer style="height: auto;background: #E9EEF3;">
-        <div style="width: 100%;" >
+        <div style="width: 100%;">
           <p>Design by JieweiYan</p>
         </div>
       </el-footer>
@@ -97,7 +104,8 @@
   vertical-align: center;
 
 }
-.el-footer{
+
+.el-footer {
   color: #333;
   text-align: center;
   line-height: 30px;
@@ -125,11 +133,13 @@ a {
 
 .el-row {
   margin-bottom: 5px;
+
 &
 :last-child {
   margin-bottom: 0;
   height: 100%;
 }
+
 }
 
 .el-col {
@@ -177,8 +187,11 @@ export default {
     };
   },
   methods: {
-    change(){
-      this.activeIndex2='1'
+    change() {
+      this.activeIndex2 = '1'
+    },
+    gotosearch() {
+      this.$router.push('/search')
     },
 
     handleSelect(key, keyPath) {
