@@ -2,9 +2,9 @@
   <div>
     <el-card class="box-card" shadow="hover" v-for="item in repeat">
       <el-row style="align-content: center; margin: 10px" >
-        <el-col :span="3">
-          <div>
-            <el-avatar :size="45" shape="square"
+        <el-col :span="3" @click.native="gotousercenter">
+          <div >
+            <el-avatar :size="45"   shape="square"
                        src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
             <p style="font-size: 12px; margin: 5px ">皮这一下真的非常开心</p>
           </div>
@@ -53,6 +53,9 @@ export default {
     },
     gotoreadpost(){
       this.$router.push('/forum/readpost')
+    },
+    gotousercenter(){
+      this.$router.push('/usercenter')
     }
   }
 }

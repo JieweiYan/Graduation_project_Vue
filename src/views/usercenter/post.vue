@@ -2,7 +2,7 @@
 <div>
   <el-card class="box-card" shadow="hover" v-for="item in repeat">
     <el-row style="align-content: center; margin: 10px" >
-      <el-col :span="3">
+      <el-col :span="3" @click.native="gotousercenter">
         <div>
           <el-avatar :size="45" shape="square"
                      src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
@@ -45,6 +45,12 @@ export default {
     return {
       repeat : ['1', '2', '3', '1', '2', '3', '1', '2', '3', '1', '2', '3'],
 
+    }
+  },
+  methods:{
+    gotousercenter(){
+      alert("1111")
+      this.$router.push('/usercenter')
     }
   },
 }

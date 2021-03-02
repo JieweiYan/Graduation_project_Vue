@@ -4,7 +4,7 @@
   <p style="font-weight: bold; font-size: 18px;">我想问一下这样到底怎么举报还是说我们拿这种人无能为力？举报原</p>
   <el-card class="box-card" shadow="never" v-for="item in repeat">
     <el-row style="align-content: center; margin: 10px" >
-      <el-col :span="4">
+      <el-col :span="4" @click.native="gotousercenter">
         <div>
           <el-avatar :size="45" shape="square"
                      src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
@@ -35,7 +35,7 @@
   <el-divider></el-divider>
   <p style="font-size: 17px; font-weight: bold; text-align: left">发表回复</p>
 
-  <quill-editor ref="text" v-model="form.content" class="myQuillEditor" :options="editorOption" />
+  <quill-editor ref="text"  class="myQuillEditor" :options="editorOption" />
 
 
 </div>
@@ -116,7 +116,9 @@ export default {
     }
   },
   methods:{
-
+    gotousercenter(){
+      this.$router.push('/usercenter')
+    }
   }
 }
 </script>
