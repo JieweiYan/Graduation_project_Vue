@@ -1,10 +1,10 @@
 <template>
-<h1>这是论坛</h1>
+
 </template>
 
 <script>
 export default {
-  name: "forum"
+  name: "Boutique"
 }
 </script>
 

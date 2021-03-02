@@ -3,9 +3,6 @@
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
              label-width="120px" class="demo-ruleForm" style="width: 600px">
       <div>
-        <el-form-item label="昵称" prop="username" >
-          <el-input v-model.number="ruleForm.username" maxlength="10" show-word-limit></el-input>
-        </el-form-item>
         <el-form-item label="你的真实姓名" prop="name">
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>

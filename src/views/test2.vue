@@ -1,424 +1,100 @@
 <template>
   <div id="wrap">
-    <div>div1</div>
-    <div>div1</div>
-    <div>div1</div>
+    <quill-editor ref="text" v-model="form.content" class="myQuillEditor" :options="editorOption" />
   </div>
 </template>
 <script>
-export default {
-  name:'CropTool',
-  props:{
-    label:{
-      type:String,
-      default:"选择图片",
-      required:false
-    },
-    boxWidth:{
-      type:Number,
-      default:800,
-      required:false
-    },
-    boxHeight:{
-      type:Number,
-      default:400,
-      required:false
-    },
-    rate:{
-      type:String,
-      default:null,
-      required:false,
-    }
-  },
-  data(){
-    return {
-      visible:false,
-      drawImg:{
-        img:null,//规定要使用的图像、画布或视频
-        sx:0,//开始剪切的 x 坐标位置
-        sy:0,//开始剪切的 y 坐标位置
-        swidth:0,//被剪切图像的宽度
-        sheight:0,//被剪切图像的高度
-        x:0,//在画布上放置图像的 x 坐标位置
-        y:0,//在画布上放置图像的 y 坐标位置
-        width:0,//要使用的图像的宽度
-        height:0//要使用的图像的高度
-      },
-      toolBox:{
-        disable:true,
-        width:200,
-        height:200,
-        x:0,
-        y:0,
-        boxMove:{
-          start:{
-            x:0,
-            y:0,
-          },
-          moveTo:{
-            x:0,
-            y:0,
-          }
-        },
-      },
-      controlBox:{
-        disable:true,
-        btnName:'',
-        start:{
-          x:0,
-          y:0,
-          width:0,
-          height:0,
-        }
-      },
-      selectBox:false,
-      selectBoxColor:'rgba(0,0,0,0.6)',
-    }
-  },
-  mounted(){
 
+import Quill from 'quill'
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { container, ImageExtend } from 'quill-image-extend-module'
+Quill.register('modules/ImageExtend', ImageExtend)
+
+export default {
+  components: {
+    quillEditor
   },
   methods:{
-    handleClose:function(){
-      this.visible = false;
-      this.$nextTick(()=>{
-        this.clearAll();
-      });
+    imgHandler(state) {
+      this.quillImg = true
+      this.addRange = this.$refs.text.quill.getSelection()
+      if (state) {
+        let fileInput = this.$refs.addImg
+        console.log(fileInput)
+        fileInput.click()
+      }
     },
+  },
+  data() {
+    return {
+      editorOption: {
+        modules: {
+          ImageExtend: {
+            // 如果不作设置，即{}  则依然开启复制粘贴功能且以base64插入
+            name: "file", // 图片参数名
+            size: 3, // 可选参数 图片大小，单位为M，1M = 1024kb
+            action: "/api/admin/sys-file/uploadImg", // 服务器地址, 如果action为空，则采用base64插入图片
+            // response 为一个函数用来获取服务器返回的具体图片地址
+            // 例如服务器返回{code: 200; data:{ url: 'baidu.com'}}
+            // 则 return res.data.url
+            response: res => {
+              return res.data;
+            },
+            headers: xhr => {
+              // 上传图片请求需要携带token的 在xhr.setRequestHeader中设置
+              xhr.setRequestHeader(
+                  "Authorization",
+                  this.getCookie("username")
+                      ? this.getCookie("username").token_type +
+                      this.getCookie("username").access_token
+                      : "Basic emh4eTp6aHh5"
+              );
+            }, // 可选参数 设置请求头部
+            sizeError: () => {}, // 图片超过大小的回调
+            start: () => {}, // 可选参数 自定义开始上传触发事件
+            end: () => {}, // 可选参数 自定义上传结束触发的事件，无论成功或者失败
+            error: () => {}, // 可选参数 上传失败触发的事件
+            success: () => {}, // 可选参数  上传成功触发的事件
+            change: (xhr, formData) => {
+              // xhr.setRequestHeader('myHeader','myValue')
+              // formData.append('token', 'myToken')
+            } // 可选参数 每次选择图片触发，也可用来设置头部，但比headers多了一个参数，可设置formData
+          },
 
-    // 选择图片 e.stopPropagation();
-    chooseImg:function(){
-      this.$refs['inputFile'].value = "";
-      this.drawImg.img = null;
-      let c = this.$refs['canvas'];
-      let ctx = c.getContext("2d");
-      ctx.clearRect(0,0,c.width,c.height);
-      this.$refs['inputFile'].click();
-    },
-    // 将选择的图片绘制到画布
-    putImgToCanv:function(e){
-      let _this = this;
-      let file = e.target.files[0] || null;
-      if(file) {
-        let reader = new FileReader();
-        new Image();
-        reader.readAsDataURL(file);
-        reader.onload = function(e) {
-          // 图片base64化
-          let newUrl = e.target.result;
-          let img = document.createElement('img');
-          img.src = newUrl;
-          let timmer = setInterval(function(){
-            if(reader.readyState == 2) {
-              clearInterval(timmer);
-              let imgHeight = img.height;
-              let imgWidth = img.width;
-              let boxWidth = _this.boxWidth;
-              let boxHeight = _this.boxHeight;
-              let c = _this.$refs['canvas'];
-              let ctx = c.getContext("2d");
-              let rate;
-              let drawImg = _this.drawImg;
-              drawImg.img = img;
-              if(imgHeight<boxHeight && imgWidth < boxWidth) {
-                rate = 1;
-                drawImg.x = (boxWidth - imgWidth)/2;
-                drawImg.y = (boxHeight - imgHeight)/2;
-              } else {
-                if(imgWidth/imgHeight <= boxWidth/boxHeight) { // 计算宽高比
-                  rate = boxHeight/imgHeight;
-                  drawImg.x = (boxWidth - imgWidth*rate)/2;
-                } else {
-                  rate = boxWidth/imgWidth;
-                  drawImg.y = (boxHeight - imgHeight*rate)/2;
-                }
+          toolbar: {
+            // 如果不上传图片到服务器，此处不必配置
+            container: [
+              ["bold", "italic", "underline", "strike"], // toggled buttons
+              ["blockquote", "code-block"],
+
+              [{ header: 1 }, { header: 2 }], // custom button values
+              [{ list: "ordered" }, { list: "bullet" }],
+              [{ script: "sub" }, { script: "super" }], // superscript/subscript
+              [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+              [{ direction: "rtl" }], // text direction
+
+              [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+              [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+              [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+              [{ font: [] }],
+              [{ align: [] }],
+              ["image"] //去除video即可
+            ], // container为工具栏，此次引入了全部工具栏，也可自行配置
+            handlers: {
+              image: function() {
+                // 劫持原来的图片点击按钮事件
+                QuillWatch.emit(this.quill.id);
               }
-              ctx.clearRect(0,0,c.width,c.height);
-              drawImg.swidth = imgWidth;
-              drawImg.sheight = imgHeight;
-              drawImg.width = imgWidth*rate;
-              drawImg.height = imgHeight*rate;
-              ctx.drawImage(drawImg.img,drawImg.sx,drawImg.sy,drawImg.swidth,drawImg.sheight,drawImg.x,drawImg.y,drawImg.width,drawImg.height);
             }
-          },200);
-        };
-        this.toolBox.x = this.boxWidth/2 - this.toolBox.width;
-        this.toolBox.y = this.boxHeight/2 - this.toolBox.height;
-        this.drawControlBox(this.toolBox.width,this.toolBox.height,this.toolBox.x,this.toolBox.y);
-      }
-    },
-    // clear both
-    clearAll:function(){
-      let _this = this;
-      let c = _this.$refs['canvas'];
-      let ctx = c.getContext("2d");
-      ctx.clearRect(0,0,c.width,c.height);
-      let c1 = _this.$refs['canvasSelectBox'];
-      let ctx1 = c1.getContext("2d");
-      ctx1.clearRect(0,0,c1.width,c1.height);
-      this.drawImg = {
-        img:null,//规定要使用的图像、画布或视频
-        sx:0,//开始剪切的 x 坐标位置
-        sy:0,//开始剪切的 y 坐标位置
-        swidth:0,//被剪切图像的宽度
-        sheight:0,//被剪切图像的高度
-        x:0,//在画布上放置图像的 x 坐标位置
-        y:0,//在画布上放置图像的 y 坐标位置
-        width:0,//要使用的图像的宽度
-        height:0//要使用的图像的高度
-      };
-    },
-    // draw control
-    drawControlBox:function(width,height,x,y){
-      if(width<50|| height<50) {
-        return false;
-      }
-      let $toolBoxControl = this.$refs['toolBoxControl'];
-      if(x<0) {
-        x = 0;
-      }
-      if(y<0) {
-        y=0;
-      }
-      if(x+this.toolBox.width > this.boxWidth) {
-        x = this.boxWidth - this.toolBox.width;
-      }
-      if(y+this.toolBox.height > this.boxHeight) {
-        y = this.boxHeight - this.toolBox.height;
-      }
-      $toolBoxControl.style.top = y + 'px';
-      $toolBoxControl.style.left = x + 'px';
-
-      let c=this.$refs['canvasSelectBox'];
-      let ctx=c.getContext("2d");
-      ctx.fillStyle = this.selectBoxColor;
-      ctx.clearRect(0,0,c.width,c.height);
-      ctx.fillRect(0,0,c.width,c.height);
-
-      if(this.rate) {
-        let p = this.rate.split(':')[0] / this.rate.split(':')[1];
-        ctx.clearRect(x,y,width,width/p);
-        $toolBoxControl.style.width = width+'px';
-        $toolBoxControl.style.height = width/p+'px';
-        this.toolBox.height = width/p;
-      } else {
-        ctx.clearRect(x,y,width,height);
-        $toolBoxControl.style.width = width+'px';
-        $toolBoxControl.style.height = height+'px';
-      }
-      this.toolBox.boxMove.moveTo.x = x;
-      this.toolBox.boxMove.moveTo.y = y;
-    },
-    // toolBoxMouseDown
-    toolBoxMouseDown:function(e){
-      let $toolBox = this.$refs['toolBoxControl'];
-      this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
-      this.toolBox.y = parseInt($toolBox.style.top.split('px')[0]);
-      this.toolBox.disable = false;
-      this.toolBox.boxMove.start = {
-        x:e.pageX,
-        y:e.pageY,
-      };
-    },
-    toolBoxMouseMove:function(e){
-      if(this.toolBox.disable === false) {
-        let offsetX = e.pageX - this.toolBox.boxMove.start.x;
-        let offsetY = e.pageY - this.toolBox.boxMove.start.y;
-
-        let x = this.toolBox.x + offsetX;
-        let y = this.toolBox.y + offsetY;
-        this.drawControlBox(this.toolBox.width,this.toolBox.height,x,y);
-      }
-    },
-    toolBoxMouseLeave:function(){
-      this.toolBox.disable = true;
-    },
-    toolBoxMouseUp:function(e){
-      let $toolBox = this.$refs['toolBoxControl'];
-      this.toolBox.x = parseInt($toolBox.style.left.split('px')[0]);
-      this.toolBox.y = parseInt($toolBox.style.top.split('px')[0]);
-      this.toolBox.disable = true;
-    },
-    // control box
-    controlBtnMouseDown:function(e){
-      this.controlBox.disable = false;
-      this.controlBox.btnName = e.target.dataset.name;
-      this.controlBox.start.x = e.clientX;
-      this.controlBox.start.y = e.clientY;
-      this.controlBox.start.width = this.toolBox.width;
-      this.controlBox.start.height = this.toolBox.height;
-      e.stopPropagation();
-    },
-    controlBtnMouseUp:function(e){
-      this.controlBox.disable = true;
-      e.stopPropagation();
-    },
-    controlBtnMouseLeave:function(e){
-      this.controlBox.disable = true;
-      e.stopPropagation();
-    },
-    controlBtnMouseMove:function(e){
-      if(this.controlBox.disable === false) {
-        let offsetX = e.clientX - this.controlBox.start.x;
-        let offsetY = e.clientY - this.controlBox.start.y;
-
-        if(this.controlBox.btnName=='leftUp') {
-          let x = this.toolBox.x + offsetX;
-          let y = this.toolBox.y  + offsetY;
-          this.toolBox.width = (this.controlBox.start.width - offsetX)>50?(this.controlBox.start.width - offsetX):50;
-          this.toolBox.height = (this.controlBox.start.height - offsetY)>50?(this.controlBox.start.height - offsetY):50;
-          this.drawControlBox(this.toolBox.width,this.toolBox.height,x,y);
-        }
-
-        if(this.controlBox.btnName=='rightDown') {
-          let x = this.toolBox.x;
-          let y = this.toolBox.y;
-          this.toolBox.width = (this.controlBox.start.width + offsetX)>50?(this.controlBox.start.width + offsetX):50;
-          this.toolBox.height = (this.controlBox.start.height + offsetY)>50?(this.controlBox.start.height + offsetY):50;
-          this.drawControlBox(this.toolBox.width,this.toolBox.height,x,y);
+          }
         }
       }
-      e.stopPropagation();
-    },
-    cropPicture:function(){
-      let _this = this;
-      // get img
-      let c = this.$refs['canvas'];
-      let tempImg = new Image();
-      tempImg.src = c.toDataURL();
-      c.toBlob((blob)=>{
-        let reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onload = function(){
-          let timmer = setInterval(function(){
-            if(reader.readyState == 2) {
-              clearInterval(timmer);
-              let newCanv = document.createElement('canvas');
-              newCanv.width = _this.toolBox.width;
-              newCanv.height = _this.toolBox.height;
-              let ctx = newCanv.getContext("2d");
-              let params = _this.toolBox;
-              if(this.rate) {
-                let p = this.rate.split(':')[0] / this.rate.split(':')[1];
-                ctx.drawImage(tempImg,params.x,params.y,params.width,params.width*p,0,0,params.width,params.width*p);
-              } else {
-                ctx.drawImage(tempImg,params.x,params.y,params.width,params.height,0,0,params.width,params.height);
-              }
-              _this.handleClose();
-              newCanv.toBlob(function(blob){
-                _this.$emit('cutDown',{
-                  blob:blob,
-                  src:newCanv.toDataURL()
-                })
-              });
-            }
-          },200);
-        };
-      });
-    },
+
+    }
   }
 }
 </script>
-<style scoped>
-.toolMain {
-  box-sizing: border-box;
-}
-.toolBox {
-  border:1px solid #dedede;
-  background-image: linear-gradient(45deg,rgba(0,0,0,.25) 25%,transparent 0,transparent 75%,rgba(0,0,0,.25) 0),
-  linear-gradient(45deg,rgba(0,0,0,.25) 25%,transparent 0,transparent 75%,rgba(0,0,0,.25) 0);
-  background-color: #eee;
-  background-size: 30px 30px;
-  background-position: 0 0,15px 15px;
-  position: relative;
-}
-.canvas {
-  position: absolute;
-  top:0;
-  left:0;
-  z-index:99;
-}
-.canvasSelectBox {
-  position: absolute;
-  top:0;
-  left:0;
-  z-index:100;
-}
-.toolBoxControl {
-  background:transparent;
-  position:absolute;
-  z-index:101;
-  box-sizing:border-box;
-  border:1px dashed #409EFF;
-}
-.controlBox {
-  width:100%;
-  height:100%;
-  position: absolute;
-  cursor:move;
-}
-.controlBtn {
-  width:10px;
-  height:10px;
-  box-sizing:border-box;
-  border:1px solid #409EFF;
-  background:#409EFF;
-  position: absolute;
-}
-.leftUp {
-  top:0;
-  left:0;
-  margin-left:-5px;
-  margin-top:-5px;
-  cursor:se-resize;
-}
-.leftDown {
-  bottom:0;
-  left:0;
-  margin-left:-5px;
-  margin-bottom:-5px;
-  cursor:sw-resize;
-}
-.rightUp {
-  top:0;
-  right:0;
-  margin-right:-5px;
-  margin-top:-5px;
-  cursor:sw-resize;
-}
-.rightDown {
-  bottom:0;
-  right:0;
-  margin-right:-5px;
-  margin-bottom:-5px;
-  cursor:se-resize;
-}
-.toolBar {
-  margin-top:20px;
-}
-.selectArea {
-  display:block;
-  width:260px;
-  text-align:right;
-  color:#fff;
-  position:absolute;
-  top:-20px;
-  right:0;
-  font-size:10px;
-  user-select: none;
-}
-.tips {
-  position:absolute;
-  top:50%;
-  left:50%;
-  color:red;
-  z-index:101;
-  transform: translate(-50%,-50%);
-}
-
-#wrap{
-  display:flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
-</style>

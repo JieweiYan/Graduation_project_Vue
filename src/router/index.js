@@ -19,7 +19,25 @@ const routes = [
       {
         path:'forum',
         name:'论坛',
-        component:()=>import('../views/header/forum')
+        component:()=>import('../views/forum/forum'),
+        redirect: '/forum/read',
+        children: [
+          {
+            path: '/forum/read',
+            name:'看帖',
+            component:()=>import('../views/forum/read')
+          },
+          {
+            path: '/forum/readpost',
+            name:'看帖子内容',
+            component:()=>import('../views/forum/readpost')
+          },
+          {
+            path: '/forum/boutique',
+            name:'精品',
+            component:()=>import('../views/forum/boutique')
+          }
+        ]
       },
       {
         path:'directory',

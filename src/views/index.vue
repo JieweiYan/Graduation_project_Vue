@@ -3,7 +3,7 @@
     <el-container type="flex" style="height: 100%; border: 1px solid #eee; ">
       <el-header style=" height: 75px;background-color: #ffffff;">
         <el-row type="flex" class="row-bg grid-content bg-purple" justify="center" align="middle">
-          <el-col :span="5">
+          <el-col :span="4">
             <div style="height: 65px">
               <a><img src="../assets/image/ncu.png" width="189px" height="60px"></a>
             </div>
@@ -28,7 +28,7 @@
               </el-menu>
             </div>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="4">
             <div class="grid-content bg-purple">
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                 <el-menu-item>
