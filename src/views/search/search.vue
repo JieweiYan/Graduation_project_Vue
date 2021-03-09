@@ -5,8 +5,8 @@
 
 
       <div style=" width: 800px; margin: auto; ">
-        <el-container width="800px" style="min-height: 830px; ">
-          <el-header width="800px">
+        <el-container width="1200px" style="min-height: 830px; ">
+          <el-header width="1200px">
             <el-menu
                 mode="horizontal"
                 default-active="1"
@@ -14,7 +14,7 @@
               <el-menu-item index="1" @click="gotosearchpost()">
                 <span slot="title">搜索帖子</span>
               </el-menu-item>
-              <el-menu-item index="2" @click="gotoclassalbum()">
+              <el-menu-item index="2" @click="gotosearchpeople()">
                 <span slot="title">搜索人</span>
               </el-menu-item>
             </el-menu>
@@ -42,6 +42,9 @@ export default {
   methods:{
     gotosearchpost() {
       this.$router.push('/search/searchpost')
+    },
+    gotosearchpeople() {
+      this.$router.push('/search/searchpeople')
     },
   }
 }
