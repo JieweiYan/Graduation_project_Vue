@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       repeat: ['1', '2', '3', '1', '2', '3', '1', '2', '3', '1', '2', '3'],
-
+      sex:'nan',
     }
   },
   methods:{

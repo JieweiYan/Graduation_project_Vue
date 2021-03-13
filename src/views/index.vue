@@ -10,18 +10,18 @@
           </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple">
-              <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                <el-menu-item index="1">
-                  <router-link to="/home">首页</router-link>
+              <el-menu :default-active="$route.path" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                <el-menu-item index="1" @click="gotohome()">
+                  首页
                 </el-menu-item>
-                <el-menu-item index="2">
-                  <router-link to="/forum">论坛</router-link>
+                <el-menu-item index="2" @click="gotoforum()">
+                  论坛
                 </el-menu-item>
-                <el-menu-item index="3">
-                  <router-link to="/addresslist">通讯录</router-link>
+                <el-menu-item index="3" @click="gotoaddresslist()">
+                  通讯录
                 </el-menu-item>
-                <el-menu-item index="4">
-                  <router-link to="/activity">活动</router-link>
+                <el-menu-item index="4" @click="gotoactivity()">
+                  活动
                 </el-menu-item>
 
 
@@ -192,6 +192,18 @@ export default {
     },
     gotosearch() {
       this.$router.push('/search')
+    },
+    gotohome() {
+      this.$router.push('/home')
+    },
+    gotoforum() {
+      this.$router.push('/forum')
+    },
+    gotoaddresslist() {
+      this.$router.push('/addresslist')
+    },
+    gotoactivity() {
+      this.$router.push('/activity')
     },
 
     handleSelect(key, keyPath) {
