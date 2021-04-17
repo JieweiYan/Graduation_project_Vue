@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <router-view></router-view>
   </div>
 </template>
@@ -11,6 +11,7 @@
   text-align: center;
   line-height: 60px;
 }
+
 .el-main {
   background-color: #E9EEF3;
   color: #333;

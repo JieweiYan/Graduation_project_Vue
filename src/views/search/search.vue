@@ -3,7 +3,6 @@
     <el-container style=" border: 1px solid #eee">
 
 
-
       <div style=" width: 800px; margin: auto; ">
         <el-container width="1200px" style="min-height: 830px; ">
           <el-header width="1200px">
@@ -39,7 +38,7 @@ export default {
       input: '',
     };
   },
-  methods:{
+  methods: {
     gotosearchpost() {
       this.$router.push('/search/searchpost')
     },

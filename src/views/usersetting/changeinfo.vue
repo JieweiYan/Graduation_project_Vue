@@ -17,15 +17,15 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="入学年份" prop="start_year" style="text-align: left;">
-          <el-select v-model="ruleForm.start_year" placeholder="请选择年份">
-            <el-option label="2017" value="2017"></el-option>
-            <el-option label="2016" value="2016"></el-option>
+        <el-form-item label="入学年份" prop="startYear" style="text-align: left;">
+          <el-select v-model="ruleForm.startYear" placeholder="请选择年份">
+            <el-option label="2017级" value="2017级"></el-option>
+            <el-option label="2016级" value="2016级"></el-option>
           </el-select>
         </el-form-item>
 
         <el-form-item label="你的班级" prop="class" style="text-align: left;">
-          <el-select v-model="ruleForm.class" placeholder="请选择班级">
+          <el-select v-model="ruleForm.class1" placeholder="请选择班级">
             <el-option label="1班" value="class1"></el-option>
             <el-option label="2班" value="class2"></el-option>
           </el-select>
@@ -34,8 +34,8 @@
 
         <el-form-item label="你的出生日期" required>
           <el-col :span="11">
-            <el-form-item prop="date">
-              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"
+            <el-form-item prop="birthday">
+              <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birthday"
                               style="width: 100%;"></el-date-picker>
             </el-form-item>
           </el-col>
@@ -54,7 +54,8 @@
           <el-input v-model="ruleForm.introduce" maxlength="20" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="个人简介" prop="profile">
-          <el-input type="textarea"  :autosize="{ minRows: 2, maxRows: 6}" v-model="ruleForm.profile" maxlength="150" show-word-limit></el-input>
+          <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 6}" v-model="ruleForm.profile" maxlength="150"
+                    show-word-limit></el-input>
         </el-form-item>
 
         <el-form-item style="text-align: center">
@@ -89,18 +90,23 @@ export default {
     return {
       active: 0,
       ruleForm: {
+        id:'',
         telnum: '',
-        username: '',
         name: '',
         subject: '',
-        start_year: '',
-        class: '',
-        location:'',
-        date: '',
+        startYear: '',
+        class1: '',
+        location: '',
+        birthday: '',
         profession: '',
         wechatnum: '',
-        introduce:'',
+        introduce: '',
         profile: '',
+        createTime: '',
+        deleted: '',
+        password: '',
+        sex: '',
+        updateTime: '',
       },
       options: [{
         value: '选项1',
@@ -492,7 +498,7 @@ export default {
         start_year: [
           {required: true, message: '请选择入学年份', trigger: 'change'}
         ],
-        class: [
+        class1: [
           {required: true, message: '请选择班级', trigger: 'change'}
         ],
         date: [
@@ -501,10 +507,21 @@ export default {
       }
     };
   },
+  created(){
+    console.log("hhhhhh")
+    const this1 = this
+    axios.get('http://localhost:8100/user/findbyid/1', this.ruleForm).then(function (resp){
+      console.log(resp)
+      this1.ruleForm = resp.data
+    })
+  },
   methods: {
     submitForm(formName) {
       console.log(this.ruleForm)
-    },
+      axios.post('http://localhost:8100/user/update', this.ruleForm).then(function (resp) {
+        console.log(resp)
+      })
+      },
     gotologin() {
       this.$router.push('/login')
     },

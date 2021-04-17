@@ -1,13 +1,13 @@
 <template>
   <div>
     <div style="height: 120px; margin-top: 20px">
-        <el-image
-            style="width: 100px; height: 100px" :src="url">
-        </el-image>
+      <el-image
+          style="width: 100px; height: 100px" :src="url">
+      </el-image>
 
     </div>
     <div>
-<!--使用文档见https://github.com/acccccccb/vue-img-cutter/blob/master/README-zh-CN.md-->
+      <!--使用文档见https://github.com/acccccccb/vue-img-cutter/blob/master/README-zh-CN.md-->
       <ImgCutter v-on:cutDown="cutDown"
                  tool="false"
                  rate="1:1"
@@ -22,8 +22,9 @@
 
 <script>
 import ImgCutter from 'vue-img-cutter'
+
 export default {
-  components:{
+  components: {
     ImgCutter
   },
   data() {
@@ -33,12 +34,16 @@ export default {
   },
 
   methods: {
-    cutDown(res){
+    cutDown(res) {
       let imgSrc = res.dataURL;
       let file = res.file;
-      console.log(file)
-      console.log(imgSrc)
-      this.url = imgSrc
+      // console.log(file)
+      // console.log(imgSrc)
+      // this.url = imgSrc
+      let this1 = this;
+      axios.post('http://localhost:8100/user/uploadavatar', imgSrc).then(function (resp) {
+        this1.url = resp.data
+      })
     }
   },
 
@@ -46,7 +51,6 @@ export default {
 </script>
 
 <style scoped>
-
 
 
 </style>

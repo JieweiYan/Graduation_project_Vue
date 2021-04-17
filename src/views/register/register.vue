@@ -39,7 +39,7 @@
             <el-form-item label="你的出生日期" required>
               <el-col :span="11">
                 <el-form-item prop="date">
-                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"
+                  <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birthday"
                                   style="width: 100%;"></el-date-picker>
                 </el-form-item>
               </el-col>
@@ -50,7 +50,7 @@
                     v-for="item in options"
                     :key="item.value"
                     :label="item.label"
-                    :value="item.value">
+                    :value="item.label">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -561,8 +561,13 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      if (this.ruleForm.sex != "" && this.ruleForm.subject != "" && this.ruleForm.start_year != "" && this.ruleForm.class != "")
+      if (this.ruleForm.sex != "" && this.ruleForm.subject != "" && this.ruleForm.start_year != "" && this.ruleForm.class != "") {
         console.log(this.ruleForm)
+        const this1 = this
+        axios.post('http://localhost:8100/user/insert', this.ruleForm).then(function (resp) {
+          console.log(resp)
+        })
+      }
       else {
         alert("必填项还没填哦！")
       }

@@ -3,7 +3,7 @@
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm"
              label-width="120px" class="demo-ruleForm" style="width: 600px">
       <!--表单1-->
-      <div >
+      <div>
         <el-form-item label="原始密码" prop="prepass">
           <el-input type="password" v-model="ruleForm.prepass" autocomplete="off"></el-input>
         </el-form-item>
@@ -48,7 +48,7 @@ export default {
     return {
       active: 0,
       ruleForm: {
-        prepass:'',
+        prepass: '',
         pass: '',
         checkPass: '',
       },

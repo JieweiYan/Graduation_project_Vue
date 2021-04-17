@@ -1,5 +1,5 @@
 <template>
-<h1>这是活动</h1>
+  <h1>这是活动</h1>
 </template>
 
 <script>

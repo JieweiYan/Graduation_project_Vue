@@ -1,100 +1,49 @@
 <template>
-  <div id="wrap">
-    <quill-editor ref="text" v-model="form.content" class="myQuillEditor" :options="editorOption" />
+  <div>
+    <div v-for="i in item">
+      <input v-model="i.address"></input>
+      <input v-model="i.name"></input>
+    </div>
+
+
   </div>
 </template>
+
+<style>
+.el-header {
+  background-color: #B3C0D1;
+  color: #333;
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
+}
+</style>
+
 <script>
-
-import Quill from 'quill'
-import { quillEditor } from 'vue-quill-editor'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-import { container, ImageExtend } from 'quill-image-extend-module'
-Quill.register('modules/ImageExtend', ImageExtend)
-
 export default {
-  components: {
-    quillEditor
-  },
-  methods:{
-    imgHandler(state) {
-      this.quillImg = true
-      this.addRange = this.$refs.text.quill.getSelection()
-      if (state) {
-        let fileInput = this.$refs.addImg
-        console.log(fileInput)
-        fileInput.click()
-      }
+  methods: {
+    submit(){
+      axios.post('http://localhost:8100/test/insert', this.item).then(function (resp) {
+        console.log(resp)
+      })
     },
+  },
+
+  created() {
+    const this1 = this
+    axios.get('http://localhost:8100/test/getall', this.form).then(function (resp){
+      console.log(resp)
+      this1.item = resp.data
+    })
   },
   data() {
     return {
-      editorOption: {
-        modules: {
-          ImageExtend: {
-            // 如果不作设置，即{}  则依然开启复制粘贴功能且以base64插入
-            name: "file", // 图片参数名
-            size: 3, // 可选参数 图片大小，单位为M，1M = 1024kb
-            action: "/api/admin/sys-file/uploadImg", // 服务器地址, 如果action为空，则采用base64插入图片
-            // response 为一个函数用来获取服务器返回的具体图片地址
-            // 例如服务器返回{code: 200; data:{ url: 'baidu.com'}}
-            // 则 return res.data.url
-            response: res => {
-              return res.data;
-            },
-            headers: xhr => {
-              // 上传图片请求需要携带token的 在xhr.setRequestHeader中设置
-              xhr.setRequestHeader(
-                  "Authorization",
-                  this.getCookie("username")
-                      ? this.getCookie("username").token_type +
-                      this.getCookie("username").access_token
-                      : "Basic emh4eTp6aHh5"
-              );
-            }, // 可选参数 设置请求头部
-            sizeError: () => {}, // 图片超过大小的回调
-            start: () => {}, // 可选参数 自定义开始上传触发事件
-            end: () => {}, // 可选参数 自定义上传结束触发的事件，无论成功或者失败
-            error: () => {}, // 可选参数 上传失败触发的事件
-            success: () => {}, // 可选参数  上传成功触发的事件
-            change: (xhr, formData) => {
-              // xhr.setRequestHeader('myHeader','myValue')
-              // formData.append('token', 'myToken')
-            } // 可选参数 每次选择图片触发，也可用来设置头部，但比headers多了一个参数，可设置formData
-          },
-
-          toolbar: {
-            // 如果不上传图片到服务器，此处不必配置
-            container: [
-              ["bold", "italic", "underline", "strike"], // toggled buttons
-              ["blockquote", "code-block"],
-
-              [{ header: 1 }, { header: 2 }], // custom button values
-              [{ list: "ordered" }, { list: "bullet" }],
-              [{ script: "sub" }, { script: "super" }], // superscript/subscript
-              [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-              [{ direction: "rtl" }], // text direction
-
-              [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-              [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-              [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-              [{ font: [] }],
-              [{ align: [] }],
-              ["image"] //去除video即可
-            ], // container为工具栏，此次引入了全部工具栏，也可自行配置
-            handlers: {
-              image: function() {
-                // 劫持原来的图片点击按钮事件
-                QuillWatch.emit(this.quill.id);
-              }
-            }
-          }
-        }
-      }
-
+      item:[
+          {address:'南昌大学', name: '王小虎',}
+          ],
     }
   }
-}
+};
 </script>

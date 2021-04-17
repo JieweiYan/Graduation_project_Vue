@@ -35,8 +35,8 @@
                   <el-input v-model="input" size="small" placeholder="搜索人、帖子"
                             @keyup.enter.native="gotosearch">
                     <i class="el-icon-search"
-                      slot="suffix"
-                      @click="gotosearch">
+                       slot="suffix"
+                       @click="gotosearch">
                     </i>
                   </el-input>
                 </el-menu-item>
@@ -50,7 +50,7 @@
                 <el-submenu index="8">
                   <template slot="title">
                     <el-avatar :size="30" shape="square"
-                               src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                               src="https://graduate-project1998.oss-cn-hangzhou.aliyuncs.com/testimage.jpg"></el-avatar>
                     <span slot="title" style="margin-left: 10px">严捷伟</span>
                   </template>
                   <el-menu-item>
@@ -66,8 +66,10 @@
                     </router-link>
                   </el-menu-item>
                   <el-menu-item>
-                    <i class="el-icon-s-promotion"></i>
-                    <span>退出登录</span>
+                    <router-link to="/login">
+                      <i class="el-icon-s-promotion"></i>
+                      <span>退出登录</span>
+                    </router-link>
                   </el-menu-item>
                 </el-submenu>
               </el-menu>
