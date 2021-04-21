@@ -50,8 +50,8 @@
                 <el-submenu index="8">
                   <template slot="title">
                     <el-avatar :size="30" shape="square"
-                               src="https://graduate-project1998.oss-cn-hangzhou.aliyuncs.com/testimage.jpg"></el-avatar>
-                    <span slot="title" style="margin-left: 10px">严捷伟</span>
+                               v-bind:src="user.avatar"></el-avatar>
+                    <span slot="title" style="margin-left: 10px" >{{user.name}}</span>
                   </template>
                   <el-menu-item>
                     <router-link to="/usercenter">
@@ -65,11 +65,9 @@
                       <span>个人设置</span>
                     </router-link>
                   </el-menu-item>
-                  <el-menu-item>
-                    <router-link to="/login">
-                      <i class="el-icon-s-promotion"></i>
+                  <el-menu-item @click="exit()">
+                      <i class="iconfont icon-tuichu1" style="padding: 6px" ></i>
                       <span>退出登录</span>
-                    </router-link>
                   </el-menu-item>
                 </el-submenu>
               </el-menu>
@@ -186,7 +184,18 @@ export default {
       activeIndex: '1',
       activeIndex2: '1',
       input: '',
+      user:{
+        avatar: "https://graduate-project1998.oss-cn-hangzhou.aliyuncs.com/testimage.jpg",
+        name: "YanJiewei"
+      },
     };
+  },
+  created() {
+    let id = window.localStorage.getItem("id")
+    var this1 = this
+    axios.get('http://localhost:8100/user/findbyid/'+id, this.ruleForm).then(function (resp){
+      this1.user = resp.data
+    })
   },
   methods: {
     change() {
@@ -206,6 +215,14 @@ export default {
     },
     gotoactivity() {
       this.$router.push('/activity')
+    },
+    exit(){
+      window.localStorage.clear();
+      this.$message({
+        message: '退出成功！',
+        type: 'success'
+      });
+      this.$router.push('/login')
     },
 
     handleSelect(key, keyPath) {

@@ -14,7 +14,7 @@
           <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item style="text-align: center">
-          <el-button type="primary" @click="next" style="margin-right: 90px;">确认修改</el-button>
+          <el-button type="primary" @click="submitForm" style="margin-right: 90px;">确认修改</el-button>
         </el-form-item>
       </div>
 
@@ -67,15 +67,24 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!');
-        } else {
-          console.log('error submit!!');
-          return false;
+    submitForm() {
+      const this1 = this
+      let id = window.localStorage.getItem("id")
+
+      axios.post('http://localhost:8100/user/changepwd', {prepwd: this.ruleForm.prepass, pwd: this.ruleForm.pass, id: id}).then(function (resp){
+        if(resp.data == "200"){
+          this1.$message({
+            message: '修改成功！',
+            type: 'success'
+          });
         }
-      });
+        else{
+          this1.$message({
+            message: '修改失败，请检查一下原密码！',
+            type: 'error'
+          });
+        }
+      })
     },
 
   }

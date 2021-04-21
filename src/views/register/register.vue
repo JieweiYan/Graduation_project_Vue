@@ -14,7 +14,7 @@
             <el-input v-model.number="ruleForm.telnum"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
           </el-form-item>
           <el-form-item label="确认密码" prop="checkPass">
             <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
@@ -55,15 +55,23 @@
               </el-select>
             </el-form-item>
             <el-form-item label="入学年份" prop="start_year">
-              <el-select v-model="ruleForm.start_year" placeholder="请选择年份">
-                <el-option label="2017" value="2017"></el-option>
-                <el-option label="2016" value="2016"></el-option>
+              <el-select v-model="ruleForm.startyear" placeholder="请选择年份">
+                <el-option
+                    v-for="i in yearrepeat"
+                    :key="i"
+                    :label="i+'年'"
+                    :value="i+'级'">
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="你的班级" prop="class">
-              <el-select v-model="ruleForm.class" placeholder="请选择班级">
-                <el-option label="1班" value="class1"></el-option>
-                <el-option label="2班" value="class2"></el-option>
+              <el-select v-model="ruleForm.class1" placeholder="请选择班级">
+                <el-option
+                    v-for="item in classoptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.label">
+                </el-option>
               </el-select>
             </el-form-item>
 
@@ -113,7 +121,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.pass) {
+      } else if (value !== this.ruleForm.password) {
         callback(new Error('两次输入密码不一致!'));
       } else {
         callback();
@@ -140,20 +148,82 @@ export default {
       active: 0,
       ruleForm: {
         telnum: '',
-        pass: '',
+        password: '',
         checkPass: '',
         name: '',
         sex: '',
-        date: '',
+        birthday: '',
         subject: '',
-        start_year: '',
-        class: '',
+        startyear: '',
+        class1: '',
         location: '',
         profession: '',
         wechatnum: '',
         introduce: '',
         profile: '',
       },
+      yearrepeat:[1921,1922,1923,1924,1925,1926,1927,1928,1929,1930,1931,1932,1933,1934,1935,1936,1937,1938,1939,1940,1941,1942,1943,1944,1945,1946,1947,1948,1949,1950,1951,1952,1953,1954,1955,1956,1957,1958,1959,1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020],
+      classoptions:[{
+        value: '1班',
+        label: '1班'
+      },{
+        value: '2班',
+        label: '2班'
+      },{
+        value: '3班',
+        label: '3班'
+      },{
+        value: '4班',
+        label: '4班'
+      },{
+        value: '5班',
+        label: '5班'
+      },{
+        value: '6班',
+        label: '6班'
+      },{
+        value: '7班',
+        label: '7班'
+      },{
+        value: '8班',
+        label: '8班'
+      },{
+        value: '9班',
+        label: '9班'
+      },{
+        value: '10班',
+        label: '10班'
+      },{
+        value: '11班',
+        label: '11班'
+      },{
+        value: '12班',
+        label: '12班'
+      },{
+        value: '13班',
+        label: '13班'
+      },{
+        value: '14班',
+        label: '14班'
+      },{
+        value: '15班',
+        label: '15班'
+      },{
+        value: '16班',
+        label: '16班'
+      },{
+        value: '17班',
+        label: '17班'
+      },{
+        value: '18班',
+        label: '18班'
+      },{
+        value: '19班',
+        label: '19班'
+      },{
+        value: '20班',
+        label: '20班'
+      },],
       options: [{
         value: '选项1',
         label: '哲学类'
@@ -535,7 +605,7 @@ export default {
           {required: true, validator: validatePass3, trigger: 'blur'}
         ],
 
-        pass: [
+        password: [
           {required: true, validator: validatePass, trigger: 'blur'}
         ],
         checkPass: [
@@ -547,13 +617,13 @@ export default {
         subject: [
           {required: true, message: '请选择专业', trigger: 'change'}
         ],
-        start_year: [
+        startyear: [
           {required: true, message: '请选择入学年份', trigger: 'change'}
         ],
-        class: [
+        class1: [
           {required: true, message: '请选择班级', trigger: 'change'}
         ],
-        date: [
+        birthday: [
           {type: 'date', required: true, message: '请选择出生日期', trigger: 'change'}
         ],
       }
@@ -561,11 +631,24 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      if (this.ruleForm.sex != "" && this.ruleForm.subject != "" && this.ruleForm.start_year != "" && this.ruleForm.class != "") {
+      if (this.ruleForm.sex != "" && this.ruleForm.subject != "" && this.ruleForm.startyear != "" && this.ruleForm.class1 != "") {
         console.log(this.ruleForm)
         const this1 = this
-        axios.post('http://localhost:8100/user/insert', this.ruleForm).then(function (resp) {
+        axios.post('http://localhost:8100/user/register', this.ruleForm).then(function (resp) {
           console.log(resp)
+          if(resp.data == '200'){
+            this1.$message({
+              message: '注册成功！',
+              type: 'success'
+            });
+            this1.$router.push({path:"/login"})
+          }
+          else{
+            this1.$message({
+              message: '您已经注册过了哦！',
+              type: 'error'
+            });
+          }
         })
       }
       else {

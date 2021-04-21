@@ -12,22 +12,29 @@
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value">
+                :value="item.label">
             </el-option>
           </el-select>
         </el-form-item>
 
-        <el-form-item label="入学年份" prop="startYear" style="text-align: left;">
-          <el-select v-model="ruleForm.startYear" placeholder="请选择年份">
-            <el-option label="2017级" value="2017级"></el-option>
-            <el-option label="2016级" value="2016级"></el-option>
+        <el-form-item label="入学年份" prop="start_year" style="text-align: left;">
+          <el-select v-model="ruleForm.startyear" placeholder="请选择年份">
+            <el-option
+                v-for="i in yearrepeat"
+                :key="i"
+                :label="i+'年'"
+                :value="i+'级'">
+            </el-option>
           </el-select>
         </el-form-item>
-
         <el-form-item label="你的班级" prop="class" style="text-align: left;">
           <el-select v-model="ruleForm.class1" placeholder="请选择班级">
-            <el-option label="1班" value="class1"></el-option>
-            <el-option label="2班" value="class2"></el-option>
+            <el-option
+                v-for="item in classoptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.label">
+            </el-option>
           </el-select>
         </el-form-item>
 
@@ -94,7 +101,7 @@ export default {
         telnum: '',
         name: '',
         subject: '',
-        startYear: '',
+        startyear: '',
         class1: '',
         location: '',
         birthday: '',
@@ -108,6 +115,68 @@ export default {
         sex: '',
         updateTime: '',
       },
+      yearrepeat:[1921,1922,1923,1924,1925,1926,1927,1928,1929,1930,1931,1932,1933,1934,1935,1936,1937,1938,1939,1940,1941,1942,1943,1944,1945,1946,1947,1948,1949,1950,1951,1952,1953,1954,1955,1956,1957,1958,1959,1960,1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021],
+      classoptions:[{
+        value: '1班',
+        label: '1班'
+      },{
+        value: '2班',
+        label: '2班'
+      },{
+        value: '3班',
+        label: '3班'
+      },{
+        value: '4班',
+        label: '4班'
+      },{
+        value: '5班',
+        label: '5班'
+      },{
+        value: '6班',
+        label: '6班'
+      },{
+        value: '7班',
+        label: '7班'
+      },{
+        value: '8班',
+        label: '8班'
+      },{
+        value: '9班',
+        label: '9班'
+      },{
+        value: '10班',
+        label: '10班'
+      },{
+        value: '11班',
+        label: '11班'
+      },{
+        value: '12班',
+        label: '12班'
+      },{
+        value: '13班',
+        label: '13班'
+      },{
+        value: '14班',
+        label: '14班'
+      },{
+        value: '15班',
+        label: '15班'
+      },{
+        value: '16班',
+        label: '16班'
+      },{
+        value: '17班',
+        label: '17班'
+      },{
+        value: '18班',
+        label: '18班'
+      },{
+        value: '19班',
+        label: '19班'
+      },{
+        value: '20班',
+        label: '20班'
+      },],
       options: [{
         value: '选项1',
         label: '哲学类'
@@ -488,43 +557,42 @@ export default {
         telnum: [
           {required: true, validator: validatePass3, trigger: 'blur'}
         ],
-        username: [
-          {required: true, message: '用户名不能为空', trigger: 'blur'}
+        sex: [
+          {required: true, message: '请选择性别', trigger: 'change'}
         ],
-
         subject: [
           {required: true, message: '请选择专业', trigger: 'change'}
         ],
-        start_year: [
+        startyear: [
           {required: true, message: '请选择入学年份', trigger: 'change'}
         ],
         class1: [
           {required: true, message: '请选择班级', trigger: 'change'}
         ],
-        date: [
-          {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
+        birthday: [
+          {type: 'date', required: true, message: '请选择出生日期', trigger: 'change'}
         ],
       }
     };
   },
   created(){
-    console.log("hhhhhh")
     const this1 = this
-    axios.get('http://localhost:8100/user/findbyid/1', this.ruleForm).then(function (resp){
-      console.log(resp)
+    let id = window.localStorage.getItem("id")
+    axios.get('http://localhost:8100/user/findbyid/'+id, this.ruleForm).then(function (resp){
       this1.ruleForm = resp.data
     })
   },
   methods: {
     submitForm(formName) {
       console.log(this.ruleForm)
+      let this1 = this
       axios.post('http://localhost:8100/user/update', this.ruleForm).then(function (resp) {
-        console.log(resp)
+        this1.$message({
+          message: '修改成功！',
+          type: 'success'
+        });
       })
       },
-    gotologin() {
-      this.$router.push('/login')
-    },
     next() {
       if (this.active++ > 2) this.active = 0;
     },

@@ -32,17 +32,25 @@ export default {
       url: 'https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png'
     }
   },
+  created() {
+    let id = window.localStorage.getItem("id")
+    let this1 = this
+    axios.get('http://localhost:8100/user/findbyid/'+id, this.ruleForm).then(function (resp){
+      this1.url = resp.data.avatar
+    })
+  },
 
   methods: {
     cutDown(res) {
       let imgSrc = res.dataURL;
-      let file = res.file;
-      // console.log(file)
-      // console.log(imgSrc)
-      // this.url = imgSrc
       let this1 = this;
-      axios.post('http://localhost:8100/user/uploadavatar', imgSrc).then(function (resp) {
-        this1.url = resp.data
+      let id = localStorage.getItem("id")
+      axios.post('http://localhost:8100/user/uploadavatar', {image: imgSrc, id: id}).then(function (resp) {
+        this1.url = resp.data.avatar
+        this1.$message({
+          message: '修改成功，请手动刷新一下哦！',
+          type: 'success'
+        });
       })
     }
   },

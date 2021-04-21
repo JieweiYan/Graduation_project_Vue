@@ -4,16 +4,15 @@
       <div style="margin: 8px; min-height: 500px">
         <el-aside width="300px" style=" background: #ffffff">
           <div style="padding: 30px;line-height: 10px">
-            <el-avatar :size="100"
-                       src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+            <el-avatar :size="100"  v-bind:src="user.avatar"></el-avatar>
             <p style="font-weight: bold; font-size: 18px; margin: 15px ">
-              <i v-bind:style="user.sex=='nan'?'color:lightskyblue':'color:hotpink'"
-                 :class="user.sex=='nan'?'el-icon-male':'el-icon-female'"></i>{{user.name}}</p>
+              <i v-bind:style="user.sex=='男'?'color:lightskyblue':'color:hotpink'"
+                 :class="user.sex=='男'?'el-icon-male':'el-icon-female'"></i>{{user.name}}</p>
             <p style="font-size: 14px; margin: 15px; min-height: auto">{{user.introduce}}</p>
             <div style="text-align: left; line-height:20px; font-size: 14px;margin-top: 25px">
               <p>现居地：{{user.location}}</p>
               <p>微信号：{{user.wechatnum}}</p>
-              <p>专业班级：{{user.start_year}}{{user.subject}}{{user.class1}}</p>
+              <p>专业班级：{{user.startyear}}{{user.subject}}{{user.class1}}</p>
               <p>职业：{{user.profession}}</p>
               <p>个人简介：{{user.profile}}</p>
             </div>
@@ -68,13 +67,14 @@ export default {
   data() {
     return {
       user: {
-        // id: '1',
+        id:'',
         sex: 'nan',
         name: '严伟',
+        avatar: "",
         username: "皮这一下真的非常开心",
         wechatnum: 'YanJiewei_',
         subject: '网络工程',
-        start_year: '2017级',
+        startyear: '2017级',
         class1: '1班',
         location: '浙江省杭州市',
         profession: '程序猿',
@@ -84,10 +84,14 @@ export default {
     }
   },
   created(){
-    console.log("hhhhhh")
+    console.log(this.$route.query.id)
     const this1 = this
-    axios.get('http://localhost:8100/user/findbyid/1', this.form).then(function (resp){
-      console.log(resp)
+    let id = ''
+    if(this.$route.query.id != null)
+      id = this.$route.query.id
+    else
+      id = window.localStorage.getItem("id")
+    axios.get('http://localhost:8100/user/findbyid/'+id).then(function (resp){
       this1.user = resp.data
     })
   },
@@ -103,7 +107,7 @@ export default {
       this.$router.push('/usercenter/reply')
     },
     gotoalbum() {
-      this.$router.push('/usercenter/album')
+      this.$router.push({path:'/usercenter/album', query: {id: this.user.id}})
     },
   }
 };

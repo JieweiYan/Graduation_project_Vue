@@ -4,14 +4,14 @@
       <div style="margin: 8px; min-height: 500px">
         <el-aside width="350px" style=" background: #ffffff">
           <div style="padding: 30px;line-height: 10px">
-            <p style="font-weight: bold; font-size: 17px">网络工程2017级1班</p>
-            <div id="wrap" @click.native="gotousercenter">
-              <div v-for="item in repeat" style="margin: 10px">
+            <p style="font-weight: bold; font-size: 17px">{{this.classmatelist[0].subject}}{{this.classmatelist[0].startyear}}{{this.classmatelist[0].class1}}</p>
+            <div id="wrap" >
+              <div v-for="item in classmatelist" style="margin: 10px" @click="gotousercenter(item.id)">
                 <el-avatar :size="50"
-                           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
+                           v-bind:src="item.avatar"></el-avatar>
                 <p style="font-size: 12px">
-                  <i v-bind:style="sex=='nan'?'color:lightskyblue':'color:hotpink'"
-                     :class="sex=='nan'?'el-icon-male':'el-icon-female'"></i>严捷伟</p>
+                  <i v-bind:style="item.sex=='男'?'color:lightskyblue':'color:hotpink'"
+                     :class="item.sex=='男'?'el-icon-male':'el-icon-female'"></i>{{item.name}}</p>
               </div>
             </div>
 
@@ -49,16 +49,21 @@ export default {
   name: "addresslist",
   data() {
     return {
-      repeat: ['1', '2', '3', '1', '2', '3', '1', '2', '3', '1', '2', '3'],
-      sex: 'nan',
+      classmatelist:[
+        {id:'', name:'', avatar:'',sex:'', class1:'', startyear:'', subject:''}
+      ]
     }
   },
+  created() {
+    let id = window.localStorage.getItem("id")
+    var this1 = this
+    axios.get('http://localhost:8100/user/getclassmatelist/'+id).then(function (resp) {
+      this1.classmatelist = resp.data
+    })
+  },
   methods: {
-    handleChange(file, fileList) {
-      this.fileList = fileList.slice(-3);
-    },
-    gotousercenter() {
-      this.$router.push('/usercenter')
+    gotousercenter(id) {
+      this.$router.push({path:'/usercenter', query: { id: id}})
     },
     gotochatroom() {
       this.$router.push('/addresslist/chatroom')

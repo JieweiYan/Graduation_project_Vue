@@ -1,0 +1,23 @@
+{
+  "id": "2498035",
+  "name": "毕业设计",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5124722",
+      "name": "退出",
+      "font_class": "tuichu",
+      "unicode": "e69c",
+      "unicode_decimal": 59036
+    },
+    {
+      "icon_id": "7055649",
+      "name": "退出",
+      "font_class": "tuichu1",
+      "unicode": "e72e",
+      "unicode_decimal": 59182
+    }
+  ]
+}

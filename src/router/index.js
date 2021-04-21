@@ -125,6 +125,11 @@ const routes = [
                         name: '修改密码',
                         component: () => import('../views/usersetting/changepwd')
                     },
+                    {
+                        path: '/usersetting/justflash',
+                        name: '强制刷新页面',
+                        component: () => import('../views/usersetting/justflash')
+                    },
                 ]
             },
 
@@ -158,6 +163,26 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+
+})
+
+//挂载路由导航守卫
+router.beforeEach((to,from,next)=>{
+    //to将要访问
+    // from从哪儿访问
+    // next接下来要干的事情（访问to路径）
+
+    //如果访问的是登录页面，直接放行
+    if(to.path == '/login' || to.path == '/register') {
+        if(!window.localStorage.getItem("id")){
+            return next()
+        }
+        else
+            return next('home')
+    }
+    const id =  window.localStorage.getItem("id")//取出user
+    if(!id) return next('login')//如果取出为空，说明还没登录，直接重定向到登录页面
+    next();//符合要求，直接放行
 })
 
 export default router
