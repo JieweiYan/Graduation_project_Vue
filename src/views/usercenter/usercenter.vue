@@ -84,15 +84,21 @@ export default {
     }
   },
   created(){
-    console.log(this.$route.query.id)
     const this1 = this
     let id = ''
+    //如果是从班级通讯录跳转过来的，那么获得的id就不为空，那么就将获得的id赋值给当前id，表示查看该id用户信息
+    //否则使用localstorage内的id
     if(this.$route.query.id != null)
       id = this.$route.query.id
     else
       id = window.localStorage.getItem("id")
-    axios.get('http://localhost:8100/user/findbyid/'+id).then(function (resp){
+    let token = window.localStorage.getItem("token")
+    axios.get('http://localhost:8100/user/findbyid/'+id+'/'+token).then(function (resp){
       this1.user = resp.data
+      if(resp.data == ""){
+        this1.$message.error("出了一点小问题，请您重新登录！")
+        window.localStorage.clear()
+      }
     })
   },
   methods: {

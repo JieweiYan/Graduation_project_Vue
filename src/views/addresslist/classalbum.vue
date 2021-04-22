@@ -13,6 +13,7 @@
           :file-list="fileList"
           :auto-upload="false"
           :on-success="handleSeccuce"
+          accept=".jpg,.jpeg,.png"
           multiple>
         <el-button slot="trigger" size="small" type="primary">选取照片</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
@@ -44,9 +45,6 @@
               </div>
             </el-card>
           </el-timeline-item>
-
-
-
         </el-timeline>
       </div>
     </div>
@@ -58,9 +56,14 @@ export default {
   created() {
     var this1 = this
     this1.id = window.localStorage.getItem("id")
+    let token = window.localStorage.getItem("token")
     console.log(this.id)
-    axios.get('http://localhost:8100/user/findbyid/'+this1.id).then(function (resp) {
-
+    axios.get('http://localhost:8100/user/findbyid/'+this1.id+'/'+token).then(function (resp) {
+      if(resp.data == ""){
+        window.localStorage.clear()
+        this1.$message.error("出了一点小问题，请您重新登录哦！")
+        this1.$router.go(0)
+      }
       this1.user = resp.data
       this1.uploadurl = 'http://localhost:8100/classalbum/uploadalbum/'+resp.data.class1+'/'+resp.data.subject+'/'+resp.data.startyear
       var this2 = this1
@@ -114,32 +117,13 @@ export default {
       }
       else{
         this.$message({
-          message: '上传失败！',
+          message: '上传失败，请检查一下上传文件的格式',
           type: 'error'
         });
       }
     },
 
 
-    deletepic(id){
-      var this1 = this
-      console.log("hhhhhh")
-      console.log(id)
-      axios.post('http://localhost:8100/personalbum/deletepic/'+ id).then(function (resp) {
-        if(resp.data == '200'){
-          this1.$router.go(0)
-          this1.$message({
-            message: '删除成功！',
-            type: 'success'
-          });
-        }
-      })
-
-    },
-
-    uploaddisplay(){
-      return this.id === window.localStorage.getItem('id');
-    }
   }
 }
 </script>

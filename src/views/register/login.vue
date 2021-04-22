@@ -10,7 +10,7 @@
           <el-input v-model="loginForm.telnum"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginForm.password"></el-input>
+          <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item style="align-content: center;">
           <el-button type="primary" @click="submitForm()" style="margin-left: 42px;">登录</el-button>
@@ -59,20 +59,17 @@ export default {
       let this1 = this
       axios.post('http://localhost:8100/user/login', this.loginForm).then(function (resp) {
         let user1 = resp.data.user
-        window.localStorage.setItem("id", user1.id)
-        console.log(user1)
        if(resp.data.flag == "200"){
-         this1.$message({
-           message: '登录成功！',
-           type: 'success'
-         });
+         this1.$message.success("登录成功！")
+         window.localStorage.setItem("id", user1.id)
+         window.localStorage.setItem("token", user1.token)
          this1.$router.push({path:"/home"})
        }
        else if(resp.data.flag == "500"){
          this1.$message.error("登录失败，请检查用户名或者密码是否错误！")
        }
        else{
-         this1.$message.error("您还没注册哦，快去注册把")
+         this1.$message.error("您还没注册哦，快去注册吧")
        }
       })
     },

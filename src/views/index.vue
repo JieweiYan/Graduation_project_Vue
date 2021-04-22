@@ -176,8 +176,9 @@ a {
 }
 
 </style>
-
 <script>
+
+
 export default {
   data() {
     return {
@@ -192,9 +193,21 @@ export default {
   },
   created() {
     let id = window.localStorage.getItem("id")
+    let token = window.localStorage.getItem("token")
+    if(token == null){
+      window.localStorage.clear()
+      this1.$message.error("出了一点小问题，请您重新登录哦！")
+      this1.$router.go(0)
+    }
     var this1 = this
-    axios.get('http://localhost:8100/user/findbyid/'+id, this.ruleForm).then(function (resp){
+    axios.get('http://localhost:8100/user/findbyid/'+id+'/'+token, this.ruleForm).then(function (resp){
       this1.user = resp.data
+      console.log(resp)
+      if(resp.data == ""){
+        window.localStorage.clear()
+        this1.$message.error("出了一点小问题，请您重新登录哦！")
+        this1.$router.go(0)
+      }
     })
   },
   methods: {

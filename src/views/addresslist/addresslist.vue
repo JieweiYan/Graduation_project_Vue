@@ -56,13 +56,20 @@ export default {
   },
   created() {
     let id = window.localStorage.getItem("id")
+    var token = window.localStorage.getItem("token")
     var this1 = this
-    axios.get('http://localhost:8100/user/getclassmatelist/'+id).then(function (resp) {
+    axios.get('http://localhost:8100/user/getclassmatelist/'+id+'/'+token).then(function (resp) {
+      if(resp.data == ""){
+        window.localStorage.clear()
+        this1.$message.error("出了一点小问题，请您重新登录哦！")
+        this1.$router.go(0)
+      }
       this1.classmatelist = resp.data
     })
   },
   methods: {
     gotousercenter(id) {
+      //传递参数给usercenter页面
       this.$router.push({path:'/usercenter', query: { id: id}})
     },
     gotochatroom() {

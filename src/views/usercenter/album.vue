@@ -14,6 +14,7 @@
           :file-list="fileList"
           :auto-upload="false"
           :on-success="handleSeccuce"
+          accept=".jpg,.jpeg,.png"
           multiple>
         <el-button slot="trigger" size="small" type="primary">选取照片</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
@@ -59,10 +60,18 @@ export default {
   name: "album",
   created() {
     var this1 = this
-    this.id = this.$route.query.id
-    console.log(this.id)
-    this.uploadurl = 'http://localhost:8100/personalbum/uploadalbum/'+this.id
-    axios.get('http://localhost:8100/personalbum/findbyid/'+this.id).then(function (resp){
+    //获得当前从usercent传过来的id，和localstorage的id比较，如果相同，说明是用户在查看自己的主页，就允许上传照片，否则不允许
+    let id = this.$route.query.id
+    this.id = id
+    let token = window.localStorage.getItem("token")
+    //上传照片前已经验证过token了，所以就不必带token了
+    this.uploadurl = 'http://localhost:8100/personalbum/uploadalbum/'+id
+    axios.get('http://localhost:8100/personalbum/findbyid/'+id+'/'+token).then(function (resp){
+      if(resp.data == ""){
+        window.localStorage.clear()
+        this1.$router.go(0)
+        this1.$message.error("出了一点小问题，请您重新登录哦！")
+      }
       this1.albumlist = resp.data
       for (var i = 0; i < resp.data.length; i++){
         var list = []
@@ -105,14 +114,27 @@ export default {
           type: 'success'
         });
       }
+      else{
+        this.$message({
+          message: '上传失败，请检查一下上传文件的格式',
+          type: 'error'
+        });
+      }
     },
 
 
     deletepic(id){
       var this1 = this
+      let userid = window.localStorage.getItem("id")
+      let token = window.localStorage.getItem("token")
       console.log("hhhhhh")
       console.log(id)
-      axios.post('http://localhost:8100/personalbum/deletepic/'+ id).then(function (resp) {
+      axios.post('http://localhost:8100/personalbum/deletepic/'+id+'/'+userid+'/'+token).then(function (resp) {
+        if(resp.data == ""){
+          window.localStorage.clear()
+          this1.$message.error("出了一点小问题，请您重新登录哦！")
+          this1.$router.go(0)
+        }
         if(resp.data == '200'){
           this1.$router.go(0)
           this1.$message({
@@ -123,7 +145,7 @@ export default {
       })
 
     },
-
+    //获得当前从usercent传过来的id，和localstorage的id比较，如果相同，说明是用户在查看自己的主页，就允许上传照片，否则不允许
     uploaddisplay(){
       return this.id === window.localStorage.getItem('id');
     }
