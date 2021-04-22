@@ -35,7 +35,8 @@ export default {
   created() {
     let id = window.localStorage.getItem("id")
     let this1 = this
-    axios.get('http://localhost:8100/user/findbyid/'+id, this.ruleForm).then(function (resp){
+    let token = window.localStorage.getItem("token")
+    axios.get('http://localhost:8100/user/findbyid/'+id+'/'+token, this.ruleForm).then(function (resp){
       this1.url = resp.data.avatar
     })
   },
