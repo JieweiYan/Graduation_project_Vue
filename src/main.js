@@ -8,11 +8,7 @@ import './assets/icon/iconfont.css'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import tinymce from 'tinymce'
-import VueTinymce from '@packy-tang/vue-tinymce'
 
-Vue.prototype.$tinymce = tinymce // 将全局tinymce对象指向给Vue作用域下
-Vue.use(VueTinymce)
 
 
 Vue.use(ElementUI);

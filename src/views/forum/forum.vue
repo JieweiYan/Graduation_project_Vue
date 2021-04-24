@@ -30,47 +30,49 @@
 
       <div style=" min-height: 500px">
         <el-aside width="300px" style=" background: #E9EEF3; line-height: 15px">
-<!--          <el-button type="primary" icon="el-icon-search">发新帖</el-button>-->
+
           <el-card class="box-card" shadow="hover" style="margin: 8px; ">
             <p style="font-weight: bold; font-size: 18px;">今日热榜</p>
-            <el-row style="align-content: center; text-align: center; vertical-align: middle; " v-for="item in repeat">
+            <el-row style="align-content: center; text-align: center; vertical-align: middle; " v-for="(item, index) in todayhotlist" >
               <div style="height: 40px">
                 <el-col :span="20" style="height: 100%; vertical-align: middle">
-                  <div style="height: 100%">
+                  <div style="height: 100%" @click="todaygotoreadpost(index)">
                     <el-link type="primary"
-                             style="font-size: 14px; display:block; text-align: center;line-height:40px; ">我想问一下这样到底怎么举报
+                             style="font-size: 14px; display:block; text-align: center;line-height:40px; " >{{item.title}}
                     </el-link>
                   </div>
                 </el-col>
                 <el-col :span="4" style="height: 100%; vertical-align: middle ">
                   <div>
-                    <p style="font-size: 13px"><i class="el-icon-view" style="color: #838589; size: 28px"></i>130</p>
+                    <p style="font-size: 13px"><i class="el-icon-view" style="color: #838589; size: 28px"></i>{{item.view}}</p>
                   </div>
                 </el-col>
               </div>
             </el-row>
           </el-card>
-
 
           <el-card class="box-card" shadow="hover" style="margin: 8px; ">
             <p style="font-weight: bold; font-size: 18px;">本周热榜</p>
-            <el-row style="align-content: center; text-align: center; vertical-align: middle; " v-for="item in repeat">
-              <div style="height: 40px">
+            <el-row style="align-content: center; text-align: center; vertical-align: middle; " v-for="(item, index) in weekhotlist" >
+              <div style="height: 40px" >
                 <el-col :span="20" style="height: 100%; vertical-align: middle">
-                  <div style="height: 100%">
+                  <div style="height: 100%" @click="weekgotoreadpost(index)">
                     <el-link type="primary"
-                             style="font-size: 14px; display:block; text-align: center;line-height:40px; ">我想问一下这样到底怎么举报
+                             style="font-size: 14px; display:block; text-align: center;line-height:40px; ">{{item.title}}
                     </el-link>
                   </div>
                 </el-col>
                 <el-col :span="4" style="height: 100%; vertical-align: middle ">
                   <div>
-                    <p style="font-size: 13px"><i class="el-icon-view" style="color: #838589; size: 28px"></i>130</p>
+                    <p style="font-size: 13px"><i class="el-icon-view" style="color: #838589; size: 28px"></i>{{item.view}}</p>
                   </div>
                 </el-col>
               </div>
             </el-row>
           </el-card>
+
+
+
         </el-aside>
       </div>
 
@@ -97,19 +99,47 @@
 export default {
   data() {
     return {
-      repeat: ['1', '2', '3', '1', '2', '3', '1', '2', '3', '1', '2', '3'],
+      weekhotlist:[{title:'', id:'', view:''}],
+      todayhotlist:[{title:'', id:'', view:''}],
     }
   },
+  created() {
+    let this1 = this
+    axios.get('http://localhost:8100/postcontent/weekhotlist').then(function (resp){
+      this1.weekhotlist = resp.data
+      for(var i = 0; i < this1.weekhotlist.length; i++){
+        //如果标题太长，则截取并且加省略号
+        if(this1.weekhotlist[i].title.length > 13){
+          this1.weekhotlist[i].title = this1.weekhotlist[i].title.substr(0, 13) + "...";
+        }
+      }
+    })
+    axios.get('http://localhost:8100/postcontent/todayhotlist').then(function (resp){
+      this1.todayhotlist = resp.data
+      for(var i = 0; i < this1.todayhotlist.length; i++){
+        //如果标题太长，则截取并且加省略号
+        if(this1.todayhotlist[i].title.length > 13){
+          this1.todayhotlist[i].title = this1.todayhotlist[i].title.substr(0, 13) + "...";
+        }
+      }
+    })
+  },
   methods: {
-    submitForm(formName) {
-
-    },
     gotoread() {
       this.$router.push('/forum/read')
     },
     gotoboutique() {
       this.$router.push('/forum/boutique')
     },
+    todaygotoreadpost(index){
+      // this.$router.push({path:'/forum/readpost', query:{postid:this.todayhotlist[index].id}})
+      this.$router.push('/forum/readpost?postid=' + this.todayhotlist[index].id)
+      this.$router.go(0)
+    },
+    weekgotoreadpost(index){
+      this.$router.push('/forum/readpost?postid=' + this.weekhotlist[index].id)
+      this.$router.go(0)
+    }
 
   }
 };

@@ -23,11 +23,10 @@
                 <el-menu-item index="4" @click="gotoactivity()">
                   活动
                 </el-menu-item>
-
-
               </el-menu>
             </div>
           </el-col>
+
           <el-col :span="4">
             <div class="grid-content bg-purple">
               <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
@@ -194,11 +193,6 @@ export default {
   created() {
     let id = window.localStorage.getItem("id")
     let token = window.localStorage.getItem("token")
-    if(token == null){
-      window.localStorage.clear()
-      this1.$message.error("出了一点小问题，请您重新登录哦！")
-      this1.$router.go(0)
-    }
     var this1 = this
     axios.get('http://localhost:8100/user/findbyid/'+id+'/'+token, this.ruleForm).then(function (resp){
       this1.user = resp.data

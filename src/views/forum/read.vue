@@ -1,44 +1,89 @@
 <template>
   <div>
-    <el-card class="box-card" shadow="hover" v-for="item in repeat">
+    <el-card class="box-card" shadow="hover" v-for="(item, index) in postlist">
       <el-row style="align-content: center; margin: 10px">
-        <el-col :span="3" @click.native="gotousercenter">
+        <el-col :span="3" @click.native="gotousercenter(index)">
           <div>
             <el-avatar :size="45" shape="square"
-                       src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-            <p style="font-size: 12px; margin: 5px ">皮这一下真的非常开心</p>
+                       v-bind:src="item.useravatar"></el-avatar>
+            <p style="font-size: 12px; margin: 5px ">{{item.username}}</p>
           </div>
         </el-col>
         <el-col :span="16">
           <div>
-            <el-link type="primary" style="font-size: 14px" @click="gotoreadpost">我想问一下这样到底怎么举报还是说我们拿这种人无能为力？举报原
-            </el-link>
-            <p style="font-size: 13px">我想问一下这样到底怎么举报还是说我们拿这种人无能为力？举报原因只有这么几</p>
+            <el-link type="primary" style="font-size: 14px" @click="gotoreadpost(index)">{{item.title}}</el-link>
+<!--            <p style="font-size: 13px" v-html="item.content"></p>-->
           </div>
         </el-col>
         <el-col :span="3">
           <div>
-            <p style="font-size: 13px"><i class="el-icon-chat-square" style="color: #838589; size: 25px"></i>130</p>
+            <p style="font-size: 13px"><i class="el-icon-chat-square" style="color: #838589; size: 25px"></i>{{ item.reply }}</p>
           </div>
         </el-col>
         <el-col :span="2">
           <div>
-            <p style="font-size: 12px">12:09</p>
+            <p style="font-size: 12px">{{item.date}}</p>
           </div>
         </el-col>
-
       </el-row>
     </el-card>
 
 
+<!--    <el-collapse v-model="activeName" accordion v-for="(item, index) in postlist">-->
+<!--      <el-collapse-item  v-bind:name="index">-->
+<!--        <template slot="title" style="height: 300px">-->
+<!--          <el-row style="align-content: center; margin: 10px">-->
+<!--            <el-col :span="3" @click.native="gotousercenter">-->
+<!--              <div>-->
+<!--                <el-avatar :size="45" shape="square"-->
+<!--                           v-bind:src="item.useravatar"></el-avatar>-->
+<!--                <p style="font-size: 12px; margin: 5px ">{{item.username}}</p>-->
+<!--              </div>-->
+<!--            </el-col>-->
+<!--            <el-col :span="16">-->
+<!--              <div>-->
+<!--                <el-link type="primary" style="font-size: 14px" @click="gotoreadpost">{{item.title}}</el-link>-->
+<!--                <p style="font-size: 13px" v-html="item.content"></p>-->
+<!--              </div>-->
+<!--            </el-col>-->
+<!--            <el-col :span="3">-->
+<!--              <div>-->
+<!--                <p style="font-size: 13px"><i class="el-icon-chat-square" style="color: #838589; size: 25px"></i>{{ item.reply }}</p>-->
+<!--              </div>-->
+<!--            </el-col>-->
+<!--            <el-col :span="2">-->
+<!--              <div>-->
+<!--                <p style="font-size: 12px">{{item.lastpost}}</p>-->
+<!--              </div>-->
+<!--            </el-col>-->
+<!--          </el-row>-->
+<!--        </template>-->
+<!--      </el-collapse-item>-->
+<!--    </el-collapse>-->
+
+
+
     <el-pagination
         background
+        :current-page="currentPage"
+        @current-change="handleCurrentChange"
+        :page-size="12"
         layout="prev, pager, next"
-        :total="1000">
+        :total="totlepost">
     </el-pagination>
 
+
     <div style="margin: 10px;  text-align: left;" >
-      <div style="border: 1px solid; min-height: 300px">
+      <el-input
+          type="text"
+          placeholder="标题"
+          v-model="post.title"
+          maxlength="30"
+          show-word-limit
+          style="margin: 10px 0px 10px 0px"
+      >
+      </el-input>
+      <div style="border: 1px solid lightgray; min-height: 300px">
         <section>
           <div id="div5"></div>
           <div id="div6"></div>
@@ -46,7 +91,7 @@
       </div>
 
       <div style="text-align: center; margin: 10px">
-        <el-button @click="submit">获取文本内容</el-button>
+        <el-button type="primary" @click="submit">发布新贴</el-button>
       </div>
     </div>
 
@@ -63,24 +108,111 @@ export default {
   name: "read",
   data() {
     return {
-      HTMLstr: "",
-      repeat: ['1', '2', '3', '1', '2', '3', '1', '2', '3', '1', '2', '3'],
+      totlepost:100,
+      currentPage: 1,
+      activeName: '1',
+      post:{title:'', content:''},
+      postlist:[{
+        id:'',
+        userid:'',
+        useravatar:'',
+        username:'',
+        title:'',
+        content:'',
+        reply:'',
+        view:'',
+        lastpost:'',
+        date:'',
+      }],
 
     }
   },
+  created() {
+    var this1 = this
+    axios.get('http://localhost:8100/postcontent/findallpostnum').then(function (resp){
+      this1.totlepost = resp.data
+      console.log(resp.data)
+    })
+    axios.get('http://localhost:8100/postcontent/findallpost/'+ this.currentPage).then(function (resp){
+      this1.postlist = resp.data.records
+      console.log(resp)
+      for(var i = 0; i < this1.postlist.length; i++){
+        var date = new Date();
+        var postdate = new Date(this1.postlist[i].lastpost)
+        if(date.getFullYear() == postdate.getFullYear() && date.getMonth() == postdate.getMonth() && date.getDate()==postdate.getDate()){
+          // this1.postlist[i].date = postdate.getHours() + ':' + (postdate.getMinutes() > 9)?postdate.getMinutes():( postdate.getMinutes())
+          if(postdate.getMinutes() < 10)
+            this1.postlist[i].date = postdate.getHours() + ':0' + postdate.getMinutes()
+          else
+            this1.postlist[i].date = postdate.getHours() + ':' + postdate.getMinutes()
+        }
+        else{
+          this1.postlist[i].date = (postdate.getMonth()+1) + '-' + postdate.getDate()
+        }
+      }
+    })
+  },
   methods: {
+    //切换上下页
+    handleCurrentChange(val) {
+      this.currentPage = val
+      console.log(this.currentPage)
+      var this1 = this
+      axios.get('http://localhost:8100/postcontent/findallpostnum').then(function (resp){
+        this1.totlepost = resp.data
+        console.log(resp.data)
+      })
+      axios.get('http://localhost:8100/postcontent/findallpost/'+ this.currentPage).then(function (resp){
+        this1.postlist = resp.data.records
+        console.log(resp)
+        for(var i = 0; i < this1.postlist.length; i++){
+          var date = new Date();
+          var postdate = new Date(this1.postlist[i].lastpost)
+          if(date.getFullYear() == postdate.getFullYear() && date.getMonth() == postdate.getMonth() && date.getDate()==postdate.getDate()){
+            if(postdate.getMinutes() < 10)
+              this1.postlist[i].date = postdate.getHours() + ':0' + postdate.getMinutes()
+            else
+              this1.postlist[i].date = postdate.getHours() + ':' + postdate.getMinutes()
+          }
+          else{
+            this1.postlist[i].date = (postdate.getMonth()+1) + '-' + postdate.getDate()
+          }
+        }
+      })
+    },
+
+
     //想获取文本编译框内的html，可以添加事件获取
     submit(){
-      this.HTMLstr = editor.txt.html();
+      this.post.content = editor.txt.html();
+      var xss = require("xss");
+      const safeHtml = xss(this.post.content)
       console.log(editor.txt.html());
+      console.log(safeHtml)
+      var this1 = this
+      var id = window.localStorage.getItem("id")
+      var token = window.localStorage.getItem("token")
+      axios.post('http://localhost:8100/postcontent/post/'+id+'/'+token, this.post).then(function (resp) {
+        if(resp.data == ""){
+          window.localStorage.clear()
+          this1.$message.error("出了一点小问题，请您重新登录哦！")
+          this1.$router.go(0)
+        }
+        else{
+          this1.$message.success("发布成功！")
+          this1.$router.go(0)
+        }
+      })
+
     },
     submitForm(formName) {
 
     },
-    gotoreadpost() {
-      this.$router.push('/forum/readpost')
+    gotoreadpost(index) {
+      this.$router.push({path:'/forum/readpost', query:{postid:this.postlist[index].id}})
     },
-    gotousercenter() {
+    gotousercenter(index) {
+      let userid = this.postlist[index].userid
       this.$router.push('/usercenter')
     }
   },
@@ -95,13 +227,26 @@ export default {
       'justify',  // 对齐方式
       'emoticon',  // 表情
       'image',  // 插入图片
+      // 'video',
       'undo',  // 撤销
     ]
+    let OSS = require('ali-oss');
+    // let client = new OSS({
+    //   // // region以杭州为例（oss-cn-hangzhou），其他region按实际情况填写。
+    //   // region: '<Your region>',
+    //   // // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录RAM控制台创建RAM账号。
+    //   // accessKeyId: '<Your AccessKeyId>',
+    //   // accessKeySecret: '<Your AccessKeySecret>',
+    //   // bucket: 'Your bucket name',
+    // });
+    // editor.config.height = 500
     editor.config.uploadImgShowBase64 = true;
     editor.config.uploadImgServer = 'http://localhost:8100/postcontent/uploadpic'
     editor.config.uploadImgMaxLength = 1;
     editor.config.uploadFileName = 'myFile';
-    editor.config.uploadImgMaxSize = 3 * 1024 * 1024;
+    editor.config.uploadImgMaxSize = 5 * 1024 * 1024;
+    editor.config.pasteIgnoreImg = true
+    editor.config.uploadImgTimeout = 20 * 1000
 //可使用监听函数在上传图片的不同阶段做相应处理
     editor.config.uploadImgHooks = {
       before: function (xhr, editor, files) {

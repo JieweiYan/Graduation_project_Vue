@@ -14,6 +14,7 @@
           :auto-upload="false"
           :on-success="handleSeccuce"
           accept=".jpg,.jpeg,.png"
+          :before-upload="beforeUpload"
           multiple>
         <el-button slot="trigger" size="small" type="primary">选取照片</el-button>
         <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
@@ -122,7 +123,18 @@ export default {
         });
       }
     },
+    beforeUpload(file) {
+      var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)
+      const isLt2M = file.size / 1024 / 1024 < 5     //这里做文件大小限制
 
+      if(!isLt2M) {
+        this.$message({
+          message: '上传文件大小不能超过 5MB!',
+          type: 'warning'
+        });
+      }
+      return  isLt2M
+    },
 
   }
 }
