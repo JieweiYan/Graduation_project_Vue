@@ -46,7 +46,13 @@ export default {
       let imgSrc = res.dataURL;
       let this1 = this;
       let id = localStorage.getItem("id")
-      axios.post('http://localhost:8100/user/uploadavatar', {image: imgSrc, id: id}).then(function (resp) {
+      let token = window.localStorage.getItem("token")
+      axios.post('http://localhost:8100/user/uploadavatar', {image: imgSrc, id: id, token: token}).then(function (resp) {
+        if(resp.data == ""){
+          window.localStorage.clear()
+          this1.$router.go(0)
+          this1.$message.error("出了一点小问题，请您重新登录哦！")
+        }
         this1.url = resp.data.avatar
         this1.$message({
           message: '修改成功，请手动刷新一下哦！',

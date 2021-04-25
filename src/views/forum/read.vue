@@ -68,6 +68,7 @@
         :current-page="currentPage"
         @current-change="handleCurrentChange"
         :page-size="12"
+        :hide-on-single-page="true"
         layout="prev, pager, next"
         :total="totlepost">
     </el-pagination>
@@ -102,13 +103,14 @@
 var editor = new Editor("#div5", "#div6");
 //script部分
 import Editor from "wangeditor";
+
 export default {
 
 
   name: "read",
   data() {
     return {
-      totlepost:100,
+      totlepost:0,
       currentPage: 1,
       activeName: '1',
       post:{title:'', content:''},
@@ -227,19 +229,13 @@ export default {
       'justify',  // 对齐方式
       'emoticon',  // 表情
       'image',  // 插入图片
+      'link', // 插入链接
+      'list', // 列表
+      // 'code', // 插入代码
       // 'video',
       'undo',  // 撤销
     ]
-    let OSS = require('ali-oss');
-    // let client = new OSS({
-    //   // // region以杭州为例（oss-cn-hangzhou），其他region按实际情况填写。
-    //   // region: '<Your region>',
-    //   // // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录RAM控制台创建RAM账号。
-    //   // accessKeyId: '<Your AccessKeyId>',
-    //   // accessKeySecret: '<Your AccessKeySecret>',
-    //   // bucket: 'Your bucket name',
-    // });
-    // editor.config.height = 500
+
     editor.config.uploadImgShowBase64 = true;
     editor.config.uploadImgServer = 'http://localhost:8100/postcontent/uploadpic'
     editor.config.uploadImgMaxLength = 1;
@@ -247,46 +243,8 @@ export default {
     editor.config.uploadImgMaxSize = 5 * 1024 * 1024;
     editor.config.pasteIgnoreImg = true
     editor.config.uploadImgTimeout = 20 * 1000
+    editor.i18next = window.i18next
 //可使用监听函数在上传图片的不同阶段做相应处理
-    editor.config.uploadImgHooks = {
-      before: function (xhr, editor, files) {
-        // 图片上传之前触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
-        // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
-        // return {
-        //     prevent: true,
-        //     msg: '放弃上传'
-        // }
-      },
-      success: function (xhr, editor, result) {
-        // 图片上传并返回结果，图片插入成功之后触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-      },
-      fail: function (xhr, editor, result) {
-        // 图片上传并返回结果，但图片插入错误时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-      },
-      error: function (xhr, editor) {
-        // 图片上传出错时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
-      },
-      timeout: function (xhr, editor) {
-        // 图片上传超时时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
-      },
-      // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-      // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
-      customInsert: function (insertImg, result, editor) {
-        //这个是用来回显的
-        // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
-        // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
-        // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
-        //data是我后台返回的图片调用地址：url
-        var url = result.data;
-        insertImg(url)
-        // result 必须是一个 JSON 格式字符串！！！否则报错
-      }
-    },
     editor.create();
   },
 }

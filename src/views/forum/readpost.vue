@@ -11,23 +11,27 @@
             <p style="font-size: 12px; margin: 5px ">{{item.username}}</p>
           </div>
         </el-col>
-        <el-col :span="22">
-          <div>
-            <p style="font-size: 13px" v-html="item.content"></p>
+        <el-col :span="22" style="text-align: left">
+          <div style="margin: 0px 10px 10px 10px">
+            <p style="font-size: 15px" v-html="item.content"></p>
           </div>
         </el-col>
       </el-row>
       <el-row style="align-content: center; margin: 1px">
         <el-col style="text-align: right">
-          <p style="font-size: 12px; color: #838589">{{index+1}}楼 {{item.date}}</p>
+          <p style="font-size: 12px; color: #838589">{{ ((index)+(currentPage - 2)*11 + 12) + (currentPage>1?1:0) }}楼 {{item.date}}</p>
         </el-col>
       </el-row>
     </el-card>
 
     <el-pagination
         background
+        :current-page="currentPage"
+        :page-size="11"
+        @current-change="handleCurrentChange"
+        :hide-on-single-page="true"
         layout="prev, pager, next"
-        :total="1000">
+        :total="totlepost">
     </el-pagination>
 
 
@@ -58,7 +62,11 @@ export default {
   name: "readpost",
   data() {
     return {
+      postid:'',
+      totlepost:0,
+      currentPage: 1,
       title:'',
+      mainpostid:'',
       post:{title:'', content:''},
       postlist:[{
         id:'',
@@ -76,12 +84,17 @@ export default {
   },
   created() {
     var postid = this.$route.query.postid
+    this.postid = postid
     var this1 = this
-    axios.get('http://localhost:8100/postcontent/findpostbyid/'+postid).then(function (resp){
-      this1.user = resp.data
-      console.log(resp.data)
+    axios.get('http://localhost:8100/postcontent/findpostnumbyid/'+postid).then(function (resp){
+      this1.totlepost = resp.data
+    })
+    axios.get('http://localhost:8100/postcontent/findpostbyid/'+postid+'/'+this.currentPage).then(function (resp){
       this1.title = resp.data.mainposttitle
-      this1.postlist = resp.data.replypostlist
+      console.log(resp.data)
+      this1.postlist = resp.data.mainpost
+      this1.postlist = this1.postlist.concat(resp.data.replypostlist.records)
+      this1.mainpostid = this1.postlist[0].id
       for(var i = 0; i < this1.postlist.length; i++){
         var postdate = new Date(this1.postlist[i].time)
         if(postdate.getMinutes() < 10)
@@ -99,15 +112,14 @@ export default {
     },
     //想获取文本编译框内的html，可以添加事件获取
     submit(){
-      this.post.content = editor.txt.html();
       var xss = require("xss");
-      const safeHtml = xss(this.post.content)
-      console.log(editor.txt.html());
+      const safeHtml = xss(editor.txt.html())
+      this.post.content = safeHtml;
       console.log(safeHtml)
       var this1 = this
       var id = window.localStorage.getItem("id")
       var token = window.localStorage.getItem("token")
-      axios.post('http://localhost:8100/postcontent/reply/'+this.postlist[0].id+'/'+id+'/'+token, this.post).then(function (resp) {
+      axios.post('http://localhost:8100/postcontent/reply/'+this.mainpostid +'/'+id+'/'+token, this.post).then(function (resp) {
         if(resp.data == ""){
           window.localStorage.clear()
           this1.$message.error("出了一点小问题，请您重新登录哦！")
@@ -118,7 +130,43 @@ export default {
           this1.$router.go(0)
         }
       })
-  },
+    },
+
+    handleCurrentChange(val) {
+      this.currentPage = val
+      var this1 = this
+      var postid = this.postid
+      axios.get('http://localhost:8100/postcontent/findpostnumbyid/'+postid).then(function (resp){
+        this1.totlepost = resp.data
+        console.log(this1.totlepost)
+      })
+      axios.get('http://localhost:8100/postcontent/findpostbyid/'+postid+'/'+this.currentPage).then(function (resp){
+        console.log(resp)
+        this1.title = resp.data.mainposttitle
+        if(this1.currentPage == 1){
+          this1.postlist = resp.data.mainpost
+          this1.postlist = this1.postlist.concat(resp.data.replypostlist.records)
+          for(var i = 0; i < this1.postlist.length; i++){
+            var postdate = new Date(this1.postlist[i].time)
+            if(postdate.getMinutes() < 10)
+              this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
+            else
+              this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
+          }
+        }
+        else{
+          this1.postlist = resp.data.replypostlist.records
+          for(var i = 0; i < this1.postlist.length; i++){
+            var postdate = new Date(this1.postlist[i].time)
+            if(postdate.getMinutes() < 10)
+              this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
+            else
+              this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
+          }
+        }
+
+      })
+    },
   },
   mounted() {
 
@@ -131,19 +179,12 @@ export default {
       'justify',  // 对齐方式
       'emoticon',  // 表情
       'image',  // 插入图片
+      'link', // 插入链接
+      'list', // 列表
+      // 'code', // 插入代码
       // 'video',
       'undo',  // 撤销
     ]
-    let OSS = require('ali-oss');
-    // let client = new OSS({
-    //   // // region以杭州为例（oss-cn-hangzhou），其他region按实际情况填写。
-    //   // region: '<Your region>',
-    //   // // 阿里云主账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM账号进行API访问或日常运维，请登录RAM控制台创建RAM账号。
-    //   // accessKeyId: '<Your AccessKeyId>',
-    //   // accessKeySecret: '<Your AccessKeySecret>',
-    //   // bucket: 'Your bucket name',
-    // });
-    // editor.config.height = 500
     editor.config.uploadImgShowBase64 = true;
     editor.config.uploadImgServer = 'http://localhost:8100/postcontent/uploadpic'
     editor.config.uploadImgMaxLength = 1;
@@ -152,46 +193,7 @@ export default {
     editor.config.pasteIgnoreImg = true
     editor.config.uploadImgTimeout = 20 * 1000
 //可使用监听函数在上传图片的不同阶段做相应处理
-    editor.config.uploadImgHooks = {
-      before: function (xhr, editor, files) {
-        // 图片上传之前触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，files 是选择的图片文件
-        // 如果返回的结果是 {prevent: true, msg: 'xxxx'} 则表示用户放弃上传
-        // return {
-        //     prevent: true,
-        //     msg: '放弃上传'
-        // }
-      },
-      success: function (xhr, editor, result) {
-        // 图片上传并返回结果，图片插入成功之后触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-      },
-      fail: function (xhr, editor, result) {
-        // 图片上传并返回结果，但图片插入错误时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象，result 是服务器端返回的结果
-      },
-      error: function (xhr, editor) {
-        // 图片上传出错时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
-      },
-      timeout: function (xhr, editor) {
-        // 图片上传超时时触发
-        // xhr 是 XMLHttpRequst 对象，editor 是编辑器对象
-      },
-      // 如果服务器端返回的不是 {errno:0, data: [...]} 这种格式，可使用该配置
-      // （但是，服务器端返回的必须是一个 JSON 格式字符串！！！否则会报错）
-      customInsert: function (insertImg, result, editor) {
-        //这个是用来回显的
-        // 图片上传并返回结果，自定义插入图片的事件（而不是编辑器自动插入图片！！！）
-        // insertImg 是插入图片的函数，editor 是编辑器对象，result 是服务器端返回的结果
-        // 举例：假如上传图片成功后，服务器端返回的是 {url:'....'} 这种格式，即可这样插入图片：
-        //data是我后台返回的图片调用地址：url
-        var url = result.data;
-        insertImg(url)
-        // result 必须是一个 JSON 格式字符串！！！否则报错
-      }
-    },
-        editor.create();
+    editor.create();
   },
 
 }

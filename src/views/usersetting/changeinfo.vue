@@ -578,7 +578,8 @@ export default {
   created(){
     const this1 = this
     let id = window.localStorage.getItem("id")
-    axios.get('http://localhost:8100/user/findbyid/'+id, this.ruleForm).then(function (resp){
+    let token = window.localStorage.getItem("token")
+    axios.get('http://localhost:8100/user/findbyid/'+id+'/'+token).then(function (resp){
       this1.ruleForm = resp.data
     })
   },
@@ -586,11 +587,19 @@ export default {
     submitForm(formName) {
       console.log(this.ruleForm)
       let this1 = this
-      axios.post('http://localhost:8100/user/update', this.ruleForm).then(function (resp) {
+      let id = window.localStorage.getItem("id");
+      let token = window.localStorage.getItem("token")
+      axios.post('http://localhost:8100/user/update/'+id+'/'+token, this.ruleForm).then(function (resp) {
+        if(resp.data == ""){
+          window.localStorage.clear()
+          this1.$router.go(0)
+          this1.$message.error("出了一点小问题，请您重新登录哦！")
+        }
         this1.$message({
           message: '修改成功！',
           type: 'success'
         });
+        this1.$router.go(0)
       })
       },
     next() {
