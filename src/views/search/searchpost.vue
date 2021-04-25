@@ -11,7 +11,7 @@
 
     <el-card class="box-card" shadow="hover" v-for="(item, index) in postlist">
       <el-row style="align-content: center; margin: 10px">
-        <el-col :span="3" @click.native="gotousercenter">
+        <el-col :span="3" @click.native="gotousercenter(index)">
           <div>
             <el-avatar :size="45" shape="square"
                        v-bind:src="item.useravatar"></el-avatar>
@@ -20,7 +20,7 @@
         </el-col>
         <el-col :span="16">
           <div>
-            <el-link type="primary" style="font-size: 14px" @click="gotoreadpost">{{item.title}}</el-link>
+            <el-link type="primary" style="font-size: 14px" @click="gotoreadpost(index)">{{item.title}}</el-link>
 <!--            <p style="font-size: 13px">我想问一下这样到底怎么举报还是说我们拿这种人无能为力？举报原因只有这么几</p>-->
           </div>
         </el-col>
@@ -39,6 +39,7 @@
     </el-card>
 
     <el-pagination
+        style="margin: 15px"
         background
         :current-page="currentPage"
         :hide-on-single-page="true"
@@ -111,19 +112,22 @@ export default {
     gotosearch() {
       this.$router.push('/search')
     },
-    gotousercenter() {
-      alert("1111")
-      this.$router.push('/usercenter')
+    gotousercenter(index) {
+      this.$router.push({path:'/usercenter', query:{id:this.postlist[index].userid}})
     },
-    gotoreadpost() {
-      this.$router.push('/forum/readpost')
+    gotoreadpost(index) {
+      this.$router.push({path:'/forum/readpost', query:{postid:this.postlist[index].id}})
     },
     submit(){
       var this1 = this
       axios.post('http://localhost:8100/postcontent/searchpostnum', {tag:this.input}).then(function (resp){
-        console.log(this1.input)
+        if(resp.data == 0){
+          this1.$message({
+            message: '啥也没搜到哦！试着换换关键词吧',
+            type: 'warning'
+          });
+        }
         this1.totlepost = resp.data
-        console.log(resp.data)
       })
       axios.post('http://localhost:8100/postcontent/searchpost/1', {tag:this.input}).then(function (resp) {
         this1.postlist = resp.data.records
@@ -141,7 +145,6 @@ export default {
             this1.postlist[i].date = (postdate.getMonth()+1) + '-' + postdate.getDate()
           }
         }
-
       })
     },
   }

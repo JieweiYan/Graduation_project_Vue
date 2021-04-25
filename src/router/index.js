@@ -83,7 +83,7 @@ const routes = [
             {
                 path: 'usercenter',
                 name: '个人中心',
-                // redirect: '/usercenter/post',
+                redirect: '/usercenter/post',
                 component: () => import('../views/usercenter/usercenter'),
                 children: [
                     {

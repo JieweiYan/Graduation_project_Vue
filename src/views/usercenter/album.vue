@@ -67,12 +67,7 @@ export default {
     let token = window.localStorage.getItem("token")
     //上传照片前已经验证过token了，所以就不必带token了
     this.uploadurl = 'http://localhost:8100/personalbum/uploadalbum/'+id
-    axios.get('http://localhost:8100/personalbum/findbyid/'+id+'/'+token).then(function (resp){
-      if(resp.data == ""){
-        window.localStorage.clear()
-        this1.$router.go(0)
-        this1.$message.error("出了一点小问题，请您重新登录哦！")
-      }
+    axios.get('http://localhost:8100/personalbum/findbyid/'+id).then(function (resp){
       this1.albumlist = resp.data
       for (var i = 0; i < resp.data.length; i++){
         var list = []
@@ -143,6 +138,7 @@ export default {
       console.log("hhhhhh")
       console.log(id)
       axios.post('http://localhost:8100/personalbum/deletepic/'+id+'/'+userid+'/'+token).then(function (resp) {
+        console.log(resp.data)
         if(resp.data == ""){
           window.localStorage.clear()
           this1.$message.error("出了一点小问题，请您重新登录哦！")

@@ -10,7 +10,7 @@
           <el-input v-model="loginForm.telnum"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="loginForm.password" type="password" autocomplete="off"></el-input>
+          <el-input v-model="loginForm.password" type="password" autocomplete="off" @keyup.enter.native="submitForm"></el-input>
         </el-form-item>
         <el-form-item style="align-content: center;">
           <el-button type="primary" @click="submitForm()" style="margin-left: 42px;">登录</el-button>

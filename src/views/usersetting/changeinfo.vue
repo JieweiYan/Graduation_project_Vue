@@ -7,7 +7,7 @@
           <el-input v-model="ruleForm.name"></el-input>
         </el-form-item>
         <el-form-item aria-colspan="11" label="你的专业" prop="subject" style="text-align: left;">
-          <el-select v-model="ruleForm.subject" filterable placeholder="请选择专业">
+          <el-select v-model="ruleForm.subject" filterable placeholder="搜索专业">
             <el-option
                 v-for="item in options"
                 :key="item.value"

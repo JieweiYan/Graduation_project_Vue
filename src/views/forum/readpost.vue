@@ -107,8 +107,7 @@ export default {
 
   methods: {
     gotousercenter(index) {
-      let userid = this.postlist[index].userid
-      this.$router.push('/usercenter')
+      this.$router.push({path:'/usercenter', query:{id:this.postlist[index].userid}})
     },
     //想获取文本编译框内的html，可以添加事件获取
     submit(){

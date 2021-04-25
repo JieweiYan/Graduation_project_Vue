@@ -112,7 +112,6 @@ export default {
     return {
       totlepost:0,
       currentPage: 1,
-      activeName: '1',
       post:{title:'', content:''},
       postlist:[{
         id:'',
@@ -215,7 +214,7 @@ export default {
     },
     gotousercenter(index) {
       let userid = this.postlist[index].userid
-      this.$router.push('/usercenter')
+      this.$router.push({path:'/usercenter', query:{id:this.postlist[index].userid}})
     }
   },
   mounted() {

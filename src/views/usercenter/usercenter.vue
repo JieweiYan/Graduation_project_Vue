@@ -25,15 +25,14 @@
           <el-header width="800px">
             <el-menu
                 mode="horizontal"
-                default-active="1"
                 class="el-menu-vertical-demo">
               <el-menu-item index="1" @click="gotopost()">
                 <span slot="title">发帖</span>
               </el-menu-item>
-              <el-menu-item index="2" @click="gotoreply()">
-                <span slot="title">回复</span>
-              </el-menu-item>
-              <el-menu-item index="3" @click="gotoalbum()">
+<!--              <el-menu-item index="2" @click="gotoreply()">-->
+<!--                <span slot="title">回复</span>-->
+<!--              </el-menu-item>-->
+              <el-menu-item index="2" @click="gotoalbum()">
                 <span slot="title">相册</span>
               </el-menu-item>
             </el-menu>
@@ -93,12 +92,8 @@ export default {
     else
       id = window.localStorage.getItem("id")
     let token = window.localStorage.getItem("token")
-    axios.get('http://localhost:8100/user/findbyid/'+id+'/'+token).then(function (resp){
+    axios.get('http://localhost:8100/user/findbyidnotoken/'+id).then(function (resp){
       this1.user = resp.data
-      if(resp.data == ""){
-        this1.$message.error("出了一点小问题，请您重新登录！")
-        window.localStorage.clear()
-      }
     })
   },
   methods: {
@@ -107,7 +102,7 @@ export default {
 
     },
     gotopost() {
-      this.$router.push('/usercenter/post')
+      this.$router.push({path:'/usercenter/post', query: {id: this.user.id}})
     },
     gotoreply() {
       this.$router.push('/usercenter/reply')
