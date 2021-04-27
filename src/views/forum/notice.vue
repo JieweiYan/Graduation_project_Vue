@@ -1,10 +1,12 @@
 <template>
-  <h1>这是活动</h1>
+<div>
+  <div >这是公告栏</div>
+</div>
 </template>
 
 <script>
 export default {
-  name: "activity"
+  name: "notice"
 }
 </script>
 

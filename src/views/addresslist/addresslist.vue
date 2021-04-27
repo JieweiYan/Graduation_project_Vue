@@ -14,8 +14,6 @@
                      :class="item.sex=='男'?'el-icon-male':'el-icon-female'"></i>{{item.name}}</p>
               </div>
             </div>
-
-
           </div>
         </el-aside>
       </div>

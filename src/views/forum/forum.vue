@@ -15,7 +15,7 @@
               <el-menu-item index="2" @click="gotoboutique()">
                 <span slot="title">精品</span>
               </el-menu-item>
-              <el-menu-item index="3" @click="gotoboutique()">
+              <el-menu-item index="3" @click="gotonotice()">
                 <span slot="title">公告</span>
               </el-menu-item>
 
@@ -130,6 +130,9 @@ export default {
     },
     gotoboutique() {
       this.$router.push('/forum/boutique')
+    },
+    gotonotice() {
+      this.$router.push('/forum/notice')
     },
     todaygotoreadpost(index){
       // this.$router.push({path:'/forum/readpost', query:{postid:this.todayhotlist[index].id}})

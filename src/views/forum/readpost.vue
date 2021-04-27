@@ -98,9 +98,9 @@ export default {
       for(var i = 0; i < this1.postlist.length; i++){
         var postdate = new Date(this1.postlist[i].time)
         if(postdate.getMinutes() < 10)
-          this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
+          this1.postlist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
         else
-          this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
+          this1.postlist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
       }
     })
   },
@@ -158,9 +158,9 @@ export default {
           for(var i = 0; i < this1.postlist.length; i++){
             var postdate = new Date(this1.postlist[i].time)
             if(postdate.getMinutes() < 10)
-              this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
+              this1.postlist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
             else
-              this1.postlist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
+              this1.postlist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
           }
         }
 
@@ -176,7 +176,7 @@ export default {
       'italic',
       'underline',
       'justify',  // 对齐方式
-      'emoticon',  // 表情
+      // 'emoticon',  // 表情
       'image',  // 插入图片
       'link', // 插入链接
       'list', // 列表

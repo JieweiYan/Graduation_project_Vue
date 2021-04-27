@@ -226,7 +226,7 @@ export default {
       'italic',
       'underline',
       'justify',  // 对齐方式
-      'emoticon',  // 表情
+      // 'emoticon',  // 表情
       'image',  // 插入图片
       'link', // 插入链接
       'list', // 列表

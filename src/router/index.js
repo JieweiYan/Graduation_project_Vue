@@ -54,6 +54,11 @@ const routes = [
                         path: '/forum/boutique',
                         name: '精品',
                         component: () => import('../views/forum/boutique')
+                    },
+                    {
+                        path: '/forum/notice',
+                        name:'公告',
+                        component:()=>import('../views/forum/notice')
                     }
                 ]
             },
@@ -78,7 +83,12 @@ const routes = [
             {
                 path: 'activity',
                 name: '活动',
-                component: () => import('../views/header/activity')
+                component: () => import('../views/activity/activity')
+            },
+            {
+                path: 'activity/readactivity',
+                name: '查看活动',
+                component: () => import('../views/activity/readactivity')
             },
             {
                 path: 'usercenter',
@@ -129,6 +139,24 @@ const routes = [
                         path: '/usersetting/justflash',
                         name: '强制刷新页面',
                         component: () => import('../views/usersetting/justflash')
+                    },
+                ]
+            },
+            {
+                path: 'admin',
+                name: '管理',
+                // redirect: '/admin/usermanage',
+                component: () => import('../views/admin/admin'),
+                children: [
+                    {
+                        path: '/admin/usermanage',
+                        name: '用户管理',
+                        component: () => import('../views/admin/usermanage')
+                    },
+                    {
+                        path: '/admin/postmanage',
+                        name: '帖子管理',
+                        component: () => import('../views/admin/postmanage')
                     },
                 ]
             },
