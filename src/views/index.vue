@@ -5,15 +5,16 @@
         <el-row type="flex" class="row-bg grid-content bg-purple" justify="center" align="middle">
           <el-col :span="4">
             <div style="height: 65px">
+<!--/*              <font style="font-size: 32px; font-family: STXingkai">校友云平台</font>*/-->
               <a><img src="../assets/image/ncu.png" width="189px" height="60px"></a>
             </div>
           </el-col>
           <el-col :span="6">
             <div class="grid-content bg-purple">
               <el-menu :default-active="$route.path" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                <el-menu-item index="1" @click="gotohome()">
-                  首页
-                </el-menu-item>
+<!--                <el-menu-item index="1" @click="gotohome()">-->
+<!--                  首页-->
+<!--                </el-menu-item>-->
                 <el-menu-item index="2" @click="gotoforum()">
                   论坛
                 </el-menu-item>

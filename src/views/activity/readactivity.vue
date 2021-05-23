@@ -122,8 +122,8 @@ export default {
       }
       var deadlinedate = new Date(this1.activity.deadline)
       var starttimedate = new Date(this1.activity.starttime)
-      this1.activity.deadline = deadlinedate.getMonth() + '-' + deadlinedate.getDate() + ' ' + deadlinedate.getHours() + ':' + (deadlinedate.getMinutes() == '0' ? '00' : deadlinedate.getMinutes())
-      this1.activity.starttime = starttimedate.getMonth() + '-' + starttimedate.getDate() + ' ' + starttimedate.getHours() + ':' + (starttimedate.getMinutes() == '0' ? '00' : starttimedate.getMinutes())
+      this1.activity.deadline = (deadlinedate.getMonth()+1) + '-' + deadlinedate.getDate() + ' ' + deadlinedate.getHours() + ':' + (deadlinedate.getMinutes() == '0' ? '00' : deadlinedate.getMinutes())
+      this1.activity.starttime = (starttimedate.getMonth()+1) + '-' + starttimedate.getDate() + ' ' + starttimedate.getHours() + ':' + (starttimedate.getMinutes() == '0' ? '00' : starttimedate.getMinutes())
       console.log(this1.userid)
       console.log(this1.activity.userid)
     })

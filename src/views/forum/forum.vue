@@ -7,14 +7,13 @@
           <el-header width="800px">
             <el-menu
                 mode="horizontal"
-                default-active="1"
                 class="el-menu-vertical-demo">
               <el-menu-item index="1" @click="gotoread()">
                 <span slot="title">看帖</span>
               </el-menu-item>
-              <el-menu-item index="2" @click="gotoboutique()">
-                <span slot="title">精品</span>
-              </el-menu-item>
+<!--              <el-menu-item index="2" @click="gotoboutique()">-->
+<!--                <span slot="title">精品</span>-->
+<!--              </el-menu-item>-->
               <el-menu-item index="3" @click="gotonotice()">
                 <span slot="title">公告</span>
               </el-menu-item>

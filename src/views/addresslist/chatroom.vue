@@ -90,9 +90,9 @@ export default {
       for(var i = 0; i < this1.massagelist.length; i++){
         var postdate = new Date(this1.massagelist[i].time)
         if(postdate.getMinutes() < 10)
-          this1.massagelist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
+          this1.massagelist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
         else
-          this1.massagelist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
+          this1.massagelist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
       }
     })
   },
@@ -136,9 +136,9 @@ export default {
         for(var i = 0; i < this1.massagelist.length; i++){
           var postdate = new Date(this1.massagelist[i].time)
           if(postdate.getMinutes() < 10)
-            this1.massagelist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
+            this1.massagelist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':0' + postdate.getMinutes()
           else
-            this1.massagelist[i].date = postdate.getFullYear()+'-'+postdate.getMonth()+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
+            this1.massagelist[i].date = postdate.getFullYear()+'-'+(postdate.getMonth()+1)+'-'+postdate.getDate()+' '+postdate.getHours() + ':' + postdate.getMinutes()
         }
       })
     },

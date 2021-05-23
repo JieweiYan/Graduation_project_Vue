@@ -146,9 +146,9 @@ export default {
       this1.totlepost = resp.data
       if(resp.data == ""){
         console.log(resp.data)
-        // window.localStorage.clear()
+        window.localStorage.clear()
         this1.$message.error("出了一点小问题，请您重新登录哦！")
-        // this1.$router.go(0)
+        this1.$router.go(0)
       }
       else{
         this1.haveauthority = resp.data
@@ -172,7 +172,7 @@ export default {
           this1.activitylist[i].deadline = "报名已结束"
           console.log(this1.activitylist[i].deadline)
         }else{
-          this1.activitylist[i].deadline = deadlinedate.getMonth() + '-'+ deadlinedate.getDate()+' '+deadlinedate.getHours() + ':' + (deadlinedate.getMinutes()== '0'?'00':deadlinedate.getMinutes())
+          this1.activitylist[i].deadline = (deadlinedate.getMonth()+1) + '-'+ deadlinedate.getDate()+' '+deadlinedate.getHours() + ':' + (deadlinedate.getMinutes()== '0'?'00':deadlinedate.getMinutes())
         }
       }
     })
