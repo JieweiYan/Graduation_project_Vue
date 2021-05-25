@@ -58,7 +58,7 @@
           活动已结束</p></div>
       </div>
       <div style="text-align: center" v-if="userid == activity.userid">
-        <el-button type="success" @click="exportexcel">导出参与人员信息</el-button>
+        <a :href="activity.url"><el-button type="success" >导出参与人员信息</el-button></a>
       </div>
     </div>
 
@@ -86,6 +86,7 @@ export default {
         participantednum: '',
         starttime: '',
         deadline: '',
+        url: '',
       },
     }
   },
@@ -150,13 +151,8 @@ export default {
     },
     exportexcel(){
 
-      axios.get('http://localhost:8100/activity/exportexcel/' + this.activity.id ).then(function (resp) {
-        if (resp.data != null) {
-          this1.$message.success("导出成功！")
-          this1.$router.go(0)
-        }
-      })
     }
+
   },
 
 

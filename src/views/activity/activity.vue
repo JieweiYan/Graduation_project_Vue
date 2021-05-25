@@ -95,9 +95,9 @@
           <div id="div6"></div>
         </section>
       </div>
-
+npm
       <div style="text-align: center; margin: 10px">
-        <el-button type="primary" @click="submit">发布新活动</el-button>
+        <el-button type="primary" @c lick="submit">发布新活动</el-button>
       </div>
     </div>
   </div>
