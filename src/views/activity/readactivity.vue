@@ -58,7 +58,7 @@
           活动已结束</p></div>
       </div>
       <div style="text-align: center" v-if="userid == activity.userid">
-        <a :href="activity.url"><el-button type="success" >导出参与人员信息</el-button></a>
+        <a :href="activity.url"><el-button type="success" @click="exportexcel">导出参与人员信息</el-button></a>
       </div>
     </div>
 
@@ -150,9 +150,8 @@ export default {
       })
     },
     exportexcel(){
-
+      this.$message.success("导出成功！")
     }
-
   },
 
 

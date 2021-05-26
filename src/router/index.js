@@ -9,7 +9,7 @@ const routes = [
         path: '/',
         name: 'index',
         component: () => import('../views/index.vue'),
-        redirect: 'home',
+        redirect: 'forum',
         children: [
             {
                 path: 'home',

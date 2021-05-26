@@ -65,6 +65,10 @@
                       <span>个人设置</span>
                     </router-link>
                   </el-menu-item>
+                  <el-menu-item @click="gotoadmin()" v-if="user.isadmin == 1">
+                    <i class="el-icon-set-up"  ></i>
+                    <span>管理页面</span>
+                  </el-menu-item>
                   <el-menu-item @click="exit()">
                       <i class="iconfont icon-tuichu1" style="padding: 6px" ></i>
                       <span>退出登录</span>
@@ -187,7 +191,8 @@ export default {
       input: '',
       user:{
         avatar: "https://graduate-project1998.oss-cn-hangzhou.aliyuncs.com/testimage.jpg",
-        name: "YanJiewei"
+        name: "YanJiewei",
+        isadmin: '',
       },
     };
   },
@@ -231,6 +236,9 @@ export default {
         type: 'success'
       });
       this.$router.push('/login')
+    },
+    gotoadmin(){
+      this.$router.push('/admin')
     },
 
     handleSelect(key, keyPath) {

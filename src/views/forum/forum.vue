@@ -30,6 +30,7 @@
       <div style=" min-height: 500px">
         <el-aside width="300px" style=" background: #E9EEF3; line-height: 15px">
 
+
           <el-card class="box-card" shadow="hover" style="margin: 8px; ">
             <p style="font-weight: bold; font-size: 18px;">今日热榜</p>
             <el-row style="align-content: center; text-align: center; vertical-align: middle; " v-for="(item, index) in todayhotlist" >
