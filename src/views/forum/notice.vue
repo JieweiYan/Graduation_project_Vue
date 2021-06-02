@@ -38,13 +38,7 @@ export default {
     var token = window.localStorage.getItem("token")
     var this1 = this
     axios.get('http://localhost:8100/user/isadmin/'+id+'/'+token).then(function (resp) {
-      if(resp.data == ""){
-        console.log(resp.data)
-        window.localStorage.clear()
-        this1.$message.error("出了一点小问题，请您重新登录哦！")
-        this1.$router.go(0)
-      }
-      else{
+      if(resp.data != ""){
         this1.isadmin = resp.data
       }
     })

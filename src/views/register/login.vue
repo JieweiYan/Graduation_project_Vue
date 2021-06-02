@@ -63,7 +63,7 @@ export default {
          this1.$message.success("登录成功！")
          window.localStorage.setItem("id", user1.id)
          window.localStorage.setItem("token", user1.token)
-         this1.$router.push({path:"/home"})
+         this1.$router.push({path:"/forum"})
        }
        else if(resp.data.flag == "500"){
          this1.$message.error("登录失败，请检查用户名或者密码是否错误！")

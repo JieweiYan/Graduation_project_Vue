@@ -97,7 +97,7 @@
       </div>
 npm
       <div style="text-align: center; margin: 10px">
-        <el-button type="primary" @c lick="submit">发布新活动</el-button>
+        <el-button type="primary" @click="submit">发布新活动</el-button>
       </div>
     </div>
   </div>
@@ -116,7 +116,7 @@ export default {
     return {
       totlepost: 0,
       currentPage: 1,
-      haveauthority:'',
+      haveauthority:0,
       form: {
         activityname: '',
         content: '',
@@ -144,13 +144,7 @@ export default {
     var this1 = this
     axios.get('http://localhost:8100/user/haveauthority/'+id+'/'+token).then(function (resp) {
       this1.totlepost = resp.data
-      if(resp.data == ""){
-        console.log(resp.data)
-        window.localStorage.clear()
-        this1.$message.error("出了一点小问题，请您重新登录哦！")
-        this1.$router.go(0)
-      }
-      else{
+      if(resp.data != ""){
         this1.haveauthority = resp.data
       }
     })
@@ -269,3 +263,4 @@ export default {
 <style scoped>
 
 </style>
+y

@@ -12,11 +12,6 @@ const routes = [
         redirect: 'forum',
         children: [
             {
-                path: 'home',
-                name: '首页',
-                component: () => import('../views/header/home')
-            },
-            {
                 path: 'search',
                 name: '搜索',
                 redirect: '/search/searchpost',
@@ -145,7 +140,7 @@ const routes = [
             {
                 path: 'admin',
                 name: '管理',
-                // redirect: '/admin/usermanage',
+                redirect: '/admin/usermanage',
                 component: () => import('../views/admin/admin'),
                 children: [
                     {
